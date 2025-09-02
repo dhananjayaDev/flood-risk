@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="container-fluid">
+        <!-- Welcome Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="welcome-card">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h1 class="display-6 fw-bold text-primary mb-2">
+                                <i class="fas fa-tachometer-alt me-3"></i>
+                                Welcome, {{ user.username }}!
+                            </h1>
+                            <p class="lead text-muted">Monitor flood risks and manage your dashboard</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="status-indicator">
+                                <span class="badge bg-success fs-6">
+                                    <i class="fas fa-check-circle me-2"></i>System Online
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-water fa-2x text-primary"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number">12</h3>
+                        <p class="stat-label">Active Sensors</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-exclamation-triangle fa-2x text-warning"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number">3</h3>
+                        <p class="stat-label">Alerts</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-shield-alt fa-2x text-success"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number">98%</h3>
+                        <p class="stat-label">System Uptime</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-map-marker-alt fa-2x text-info"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number">5</h3>
+                        <p class="stat-label">Monitored Areas</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="row g-4">
+            <!-- Flood Risk Map -->
+            <div class="col-lg-8">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-map me-2"></i>Flood Risk Map
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="map-placeholder">
+                            <i class="fas fa-map fa-5x text-muted mb-3"></i>
+                            <h4 class="text-muted">Interactive Map</h4>
+                            <p class="text-muted">Real-time flood risk visualization will be displayed here</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Alerts -->
+            <div class="col-lg-4">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-bell me-2"></i>Recent Alerts
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert-list">
+                            <div class="alert-item">
+                                <div class="alert-icon">
+                                    <i class="fas fa-exclamation-triangle text-warning"></i>
+                                </div>
+                                <div class="alert-content">
+                                    <h6 class="alert-title">High Water Level</h6>
+                                    <p class="alert-text">Sensor A-1 detected rising water levels</p>
+                                    <small class="text-muted">2 minutes ago</small>
+                                </div>
+                            </div>
+                            <div class="alert-item">
+                                <div class="alert-icon">
+                                    <i class="fas fa-info-circle text-info"></i>
+                                </div>
+                                <div class="alert-content">
+                                    <h6 class="alert-title">System Update</h6>
+                                    <p class="alert-text">All sensors are functioning normally</p>
+                                    <small class="text-muted">1 hour ago</small>
+                                </div>
+                            </div>
+                            <div class="alert-item">
+                                <div class="alert-icon">
+                                    <i class="fas fa-check-circle text-success"></i>
+                                </div>
+                                <div class="alert-content">
+                                    <h6 class="alert-title">Maintenance Complete</h6>
+                                    <p class="alert-text">Sensor B-3 maintenance completed successfully</p>
+                                    <small class="text-muted">3 hours ago</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row g-4 mt-4">
+            <div class="col-12">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-bolt me-2"></i>Quick Actions
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <button class="action-btn">
+                                    <i class="fas fa-plus fa-2x mb-2"></i>
+                                    <span>Add Sensor</span>
+                                </button>
+                            </div>
+                            <div class="col-md-3">
+                                <button class="action-btn">
+                                    <i class="fas fa-chart-bar fa-2x mb-2"></i>
+                                    <span>View Reports</span>
+                                </button>
+                            </div>
+                            <div class="col-md-3">
+                                <button class="action-btn">
+                                    <i class="fas fa-cog fa-2x mb-2"></i>
+                                    <span>Settings</span>
+                                </button>
+                            </div>
+                            <div class="col-md-3">
+                                <button class="action-btn">
+                                    <i class="fas fa-download fa-2x mb-2"></i>
+                                    <span>Export Data</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
