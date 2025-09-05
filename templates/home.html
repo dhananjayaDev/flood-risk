@@ -2,185 +2,815 @@
 
 {% block content %}
 <div class="dashboard-container">
-    <div class="container-fluid">
-        <!-- Welcome Section -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="welcome-card">
-                    <div class="row align-items-center">
-                        <div class="col-md-8">
-                            <h1 class="display-6 fw-bold text-primary mb-2">
-                                <i class="fas fa-tachometer-alt me-3"></i>
-                                Welcome, {{ user.username }}!
-                            </h1>
-                            <p class="lead text-muted">Monitor flood risks and manage your dashboard</p>
-                        </div>
-                        <div class="col-md-4 text-end">
-                            <div class="status-indicator">
-                                <span class="badge bg-success fs-6">
-                                    <i class="fas fa-check-circle me-2"></i>System Online
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="container-fluid px-3">
 
-        <!-- Stats Cards -->
-        <div class="row g-4 mb-4">
-            <div class="col-md-3">
+
+        <!-- Stats Cards - First Row (System Stats) -->
+        <div class="row g-2 mb-2">
+            <div class="col-lg-3 col-md-6 col-sm-6 col-6">
                 <div class="stat-card">
                     <div class="stat-icon">
-                        <i class="fas fa-water fa-2x text-primary"></i>
+                        <i class="fas fa-microchip"></i>
                     </div>
                     <div class="stat-content">
-                        <h3 class="stat-number">12</h3>
+                        <h4 class="stat-number" id="active-sensors">{{ data.stats.active_sensors }}</h4>
                         <p class="stat-label">Active Sensors</p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-lg-3 col-md-6 col-sm-6 col-6">
                 <div class="stat-card">
                     <div class="stat-icon">
-                        <i class="fas fa-exclamation-triangle fa-2x text-warning"></i>
+                        <i class="fas fa-exclamation-triangle"></i>
                     </div>
                     <div class="stat-content">
-                        <h3 class="stat-number">3</h3>
+                        <h4 class="stat-number" id="alerts-count">{{ data.stats.alerts }}</h4>
                         <p class="stat-label">Alerts</p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-lg-3 col-md-6 col-sm-6 col-6">
                 <div class="stat-card">
                     <div class="stat-icon">
-                        <i class="fas fa-shield-alt fa-2x text-success"></i>
+                        <i class="fas fa-shield-alt"></i>
                     </div>
                     <div class="stat-content">
-                        <h3 class="stat-number">98%</h3>
+                        <h4 class="stat-number" id="system-uptime">{{ data.stats.system_uptime }}%</h4>
                         <p class="stat-label">System Uptime</p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-lg-3 col-md-6 col-sm-6 col-6">
                 <div class="stat-card">
                     <div class="stat-icon">
-                        <i class="fas fa-map-marker-alt fa-2x text-info"></i>
+                        <i class="fas fa-map-marker-alt"></i>
                     </div>
                     <div class="stat-content">
-                        <h3 class="stat-number">5</h3>
+                        <h4 class="stat-number" id="monitored-areas">{{ data.stats.monitored_areas }}</h4>
                         <p class="stat-label">Monitored Areas</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Main Content -->
-        <div class="row g-4">
-            <!-- Flood Risk Map -->
-            <div class="col-lg-8">
-                <div class="dashboard-card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">
-                            <i class="fas fa-map me-2"></i>Flood Risk Map
-                        </h5>
+        <!-- API Endpoints Cards - Second Row -->
+        <div class="row g-2 mb-3">
+            <div class="col-lg-3 col-md-6 col-sm-6 col-6">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-cloud-rain"></i>
                     </div>
-                    <div class="card-body">
-                        <div class="map-placeholder">
-                            <i class="fas fa-map fa-5x text-muted mb-3"></i>
-                            <h4 class="text-muted">Interactive Map</h4>
-                            <p class="text-muted">Real-time flood risk visualization will be displayed here</p>
-                        </div>
+                    <div class="stat-content">
+                        <h4 class="stat-number" id="rainfall-endpoint">/api/rainfall</h4>
+                        <p class="stat-label">Rainfall Endpoint</p>
                     </div>
                 </div>
             </div>
-
-            <!-- Recent Alerts -->
-            <div class="col-lg-4">
-                <div class="dashboard-card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">
-                            <i class="fas fa-bell me-2"></i>Recent Alerts
-                        </h5>
+            <div class="col-lg-3 col-md-6 col-sm-6 col-6">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-seedling"></i>
                     </div>
-                    <div class="card-body">
-                        <div class="alert-list">
-                            <div class="alert-item">
-                                <div class="alert-icon">
-                                    <i class="fas fa-exclamation-triangle text-warning"></i>
-                                </div>
-                                <div class="alert-content">
-                                    <h6 class="alert-title">High Water Level</h6>
-                                    <p class="alert-text">Sensor A-1 detected rising water levels</p>
-                                    <small class="text-muted">2 minutes ago</small>
-                                </div>
-                            </div>
-                            <div class="alert-item">
-                                <div class="alert-icon">
-                                    <i class="fas fa-info-circle text-info"></i>
-                                </div>
-                                <div class="alert-content">
-                                    <h6 class="alert-title">System Update</h6>
-                                    <p class="alert-text">All sensors are functioning normally</p>
-                                    <small class="text-muted">1 hour ago</small>
-                                </div>
-                            </div>
-                            <div class="alert-item">
-                                <div class="alert-icon">
-                                    <i class="fas fa-check-circle text-success"></i>
-                                </div>
-                                <div class="alert-content">
-                                    <h6 class="alert-title">Maintenance Complete</h6>
-                                    <p class="alert-text">Sensor B-3 maintenance completed successfully</p>
-                                    <small class="text-muted">3 hours ago</small>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="stat-content">
+                        <h4 class="stat-number" id="soil-moisture-endpoint">/api/soil</h4>
+                        <p class="stat-label">Soil Moisture</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 col-6">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-mountain"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h4 class="stat-number" id="tilt-endpoint">/api/tilt</h4>
+                        <p class="stat-label">Tilt Sensor</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 col-6">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-water"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h4 class="stat-number" id="river-level-endpoint">/api/river</h4>
+                        <p class="stat-label">River Level</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Quick Actions -->
-        <div class="row g-4 mt-4">
-            <div class="col-12">
-                <div class="dashboard-card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">
-                            <i class="fas fa-bolt me-2"></i>Quick Actions
-                        </h5>
+        <!-- Clean Dashboard Grid -->
+        <div class="dashboard-grid">
+            <!-- Map Section -->
+            <div class="dashboard-section map-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-map"></i> Flood Risk Map</h3>
+                    <div class="map-legend">
+                        <span class="legend-item"><span class="legend-dot high"></span> High Risk</span>
+                        <span class="legend-item"><span class="legend-dot medium"></span> Medium Risk</span>
+                        <span class="legend-item"><span class="legend-dot low"></span> Low Risk</span>
                     </div>
-                    <div class="card-body">
-                        <div class="row g-3">
-                            <div class="col-md-3">
-                                <button class="action-btn">
-                                    <i class="fas fa-plus fa-2x mb-2"></i>
-                                    <span>Add Sensor</span>
-                                </button>
+                </div>
+                <div class="section-content">
+                    <div id="flood-risk-map"></div>
+                </div>
+            </div>
+
+            <!-- Chart Section -->
+            <div class="dashboard-section chart-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-chart-line"></i> 24h Sensor Trends</h3>
+                    <div class="chart-legend">
+                        <span class="legend-item"><span class="legend-dot rainfall"></span> Rainfall (mm)</span>
+                        <span class="legend-item"><span class="legend-dot soil"></span> Soil Moisture (%)</span>
+                        <span class="legend-item"><span class="legend-dot groundwater"></span> Groundwater (m)</span>
+                    </div>
+                </div>
+                <div class="section-content">
+                    <canvas id="sensor-chart"></canvas>
+                </div>
+            </div>
+
+            <!-- Alerts Section -->
+            <div class="dashboard-section alerts-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-bell"></i> Recent Alerts</h3>
+                </div>
+                <div class="section-content">
+                    <div class="alerts-list" id="alerts-list">
+                        {% for alert in data.recent_alerts %}
+                        <div class="alert-item" data-alert-id="{{ alert.id }}">
+                            <div class="alert-icon {{ alert.color }}">
+                                <i class="{{ alert.icon }}"></i>
                             </div>
-                            <div class="col-md-3">
-                                <button class="action-btn">
-                                    <i class="fas fa-chart-bar fa-2x mb-2"></i>
-                                    <span>View Reports</span>
-                                </button>
-                            </div>
-                            <div class="col-md-3">
-                                <button class="action-btn">
-                                    <i class="fas fa-cog fa-2x mb-2"></i>
-                                    <span>Settings</span>
-                                </button>
-                            </div>
-                            <div class="col-md-3">
-                                <button class="action-btn">
-                                    <i class="fas fa-download fa-2x mb-2"></i>
-                                    <span>Export Data</span>
-                                </button>
+                            <div class="alert-content">
+                                <div class="alert-title">{{ alert.title }}</div>
+                                <div class="alert-desc">{{ alert.description }}</div>
+                                <div class="alert-meta">
+                                    <span>{{ alert.location }}</span>
+                                    <span>{{ alert.timestamp.strftime('%H:%M') }}</span>
+                                </div>
+                                {% if alert.risk_probability > 0 %}
+                                <div class="risk-badge risk-{{ 'high' if alert.risk_probability > 70 else 'medium' if alert.risk_probability > 40 else 'low' }}">
+                                    {{ alert.risk_probability }}%
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notifications Section -->
+            <div class="dashboard-section notifications-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-paper-plane"></i> Recent Notifications</h3>
+                </div>
+                <div class="section-content">
+                    <div class="notifications-list" id="notifications-list">
+                        {% for notification in data.recent_notifications %}
+                        <div class="notification-item" data-notification-id="{{ notification.id }}">
+                            <div class="notification-icon {{ notification.color }}">
+                                <i class="{{ notification.icon }}"></i>
+                            </div>
+                            <div class="notification-content">
+                                <div class="notification-title">{{ notification.type.upper() }}</div>
+                                <div class="notification-desc">{{ notification.message }}</div>
+                                <div class="notification-meta">
+                                    <span>{{ notification.recipients }} recipients</span>
+                                    <span>{{ notification.timestamp.strftime('%H:%M') }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+
+<script>
+// Dashboard Data
+const dashboardData = {{ data | tojson }};
+
+// Initialize Map
+function initMap() {
+    console.log('Initializing map...');
+    const mapContainer = document.getElementById('flood-risk-map');
+    if (!mapContainer) {
+        console.error('Map container not found!');
+        return;
+    }
+    
+    const map = L.map('flood-risk-map').setView([40.7128, -74.0060], 12);
+    
+    // Add base layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors',
+        maxZoom: 19
+    }).addTo(map);
+    
+    console.log('Map initialized successfully');
+    
+    // Add risk zones
+    dashboardData.map_data.risk_zones.forEach(zone => {
+        const color = zone.risk === 'high' ? '#dc3545' : zone.risk === 'medium' ? '#ffc107' : '#28a745';
+        L.circleMarker([zone.lat, zone.lng], {
+            radius: 15,
+            fillColor: color,
+            color: '#fff',
+            weight: 2,
+            opacity: 1,
+            fillOpacity: 0.8
+        }).addTo(map).bindPopup(`
+            <strong>${zone.name}</strong><br>
+            Risk Level: <span class="text-${zone.risk === 'high' ? 'danger' : zone.risk === 'medium' ? 'warning' : 'success'}">${zone.risk.toUpperCase()}</span>
+        `);
+    });
+    
+    // Add sensor markers
+    dashboardData.map_data.sensors.forEach(sensor => {
+        const iconColor = sensor.risk_level === 'high' ? '#dc3545' : sensor.risk_level === 'medium' ? '#ffc107' : '#28a745';
+        const icon = L.divIcon({
+            className: 'sensor-marker',
+            html: `<div style="background-color: ${iconColor}; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>`,
+            iconSize: [20, 20],
+            iconAnchor: [10, 10]
+        });
+        
+        L.marker([sensor.lat, sensor.lng], { icon: icon }).addTo(map).bindPopup(`
+            <div class="sensor-popup">
+                <h6><i class="fas fa-thermometer-half me-1"></i>Sensor ${sensor.id}</h6>
+                <p><strong>Type:</strong> ${sensor.type.replace('_', ' ').toUpperCase()}</p>
+                <p><strong>Reading:</strong> ${sensor.reading} ${getUnit(sensor.type)}</p>
+                <p><strong>Risk Level:</strong> <span class="text-${sensor.risk_level === 'high' ? 'danger' : sensor.risk_level === 'medium' ? 'warning' : 'success'}">${sensor.risk_level.toUpperCase()}</span></p>
+                <p><strong>Last Update:</strong> ${sensor.last_update.toLocaleString()}</p>
+            </div>
+        `);
+    });
+}
+
+function getUnit(type) {
+    const units = {
+        'rainfall': 'mm',
+        'soil_moisture': '%',
+        'tilt': '°',
+        'river_level': 'm'
+    };
+    return units[type] || '';
+}
+
+// Calculate trend line data
+function calculateTrendLine(data) {
+    const n = data.length;
+    const x = Array.from({length: n}, (_, i) => i);
+    
+    // Calculate linear regression
+    const sumX = x.reduce((a, b) => a + b, 0);
+    const sumY = data.reduce((a, b) => a + b, 0);
+    const sumXY = x.reduce((sum, xi, i) => sum + xi * data[i], 0);
+    const sumXX = x.reduce((sum, xi) => sum + xi * xi, 0);
+    
+    const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+    const intercept = (sumY - slope * sumX) / n;
+    
+    return x.map(xi => slope * xi + intercept);
+}
+
+// Initialize Charts
+function initCharts() {
+    const ctx = document.getElementById('sensor-chart').getContext('2d');
+    
+    // Debug: Check data structure
+    console.log('Dashboard Data:', dashboardData);
+    console.log('Sensor Data:', dashboardData.sensor_data);
+    
+    // Ensure we have the data, create sample data if missing
+    if (!dashboardData.sensor_data) {
+        console.warn('No sensor data found, creating sample data');
+        dashboardData.sensor_data = {
+            labels: Array.from({length: 24}, (_, i) => `${i}:00`),
+            rainfall: Array.from({length: 24}, () => Math.random() * 10),
+            soil_moisture: Array.from({length: 24}, () => Math.random() * 40 + 30),
+            groundwater: Array.from({length: 24}, () => Math.random() * 10 + 5)
+        };
+    }
+    
+    // Calculate trend lines
+    const rainfallTrend = calculateTrendLine(dashboardData.sensor_data.rainfall);
+    const soilTrend = calculateTrendLine(dashboardData.sensor_data.soil_moisture);
+    const groundwaterTrend = calculateTrendLine(dashboardData.sensor_data.groundwater);
+    
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: dashboardData.sensor_data.labels,
+            datasets: [
+                {
+                    label: 'Rainfall (mm)',
+                    data: dashboardData.sensor_data.rainfall,
+                    borderColor: '#1976d2',
+                    backgroundColor: 'rgba(25, 118, 210, 0.1)',
+                    tension: 0.4,
+                    pointRadius: 3,
+                    pointHoverRadius: 5
+                },
+                {
+                    label: 'Rainfall Trend',
+                    data: rainfallTrend,
+                    borderColor: '#1976d2',
+                    backgroundColor: 'transparent',
+                    borderDash: [5, 5],
+                    pointRadius: 0,
+                    pointHoverRadius: 0,
+                    tension: 0
+                },
+                {
+                    label: 'Soil Moisture (%)',
+                    data: dashboardData.sensor_data.soil_moisture,
+                    borderColor: '#388e3c',
+                    backgroundColor: 'rgba(56, 142, 60, 0.1)',
+                    tension: 0.4,
+                    pointRadius: 3,
+                    pointHoverRadius: 5
+                },
+                {
+                    label: 'Soil Moisture Trend',
+                    data: soilTrend,
+                    borderColor: '#388e3c',
+                    backgroundColor: 'transparent',
+                    borderDash: [5, 5],
+                    pointRadius: 0,
+                    pointHoverRadius: 0,
+                    tension: 0
+                },
+                {
+                    label: 'Groundwater (m)',
+                    data: dashboardData.sensor_data.groundwater,
+                    borderColor: '#0288d1',
+                    backgroundColor: 'rgba(2, 136, 209, 0.1)',
+                    tension: 0.4,
+                    pointRadius: 3,
+                    pointHoverRadius: 5
+                },
+                {
+                    label: 'Groundwater Trend',
+                    data: groundwaterTrend,
+                    borderColor: '#0288d1',
+                    backgroundColor: 'transparent',
+                    borderDash: [5, 5],
+                    pointRadius: 0,
+                    pointHoverRadius: 0,
+                    tension: 0
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0,0,0,0.1)'
+                    }
+                },
+                x: {
+                    grid: {
+                        color: 'rgba(0,0,0,0.1)'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    filter: function(tooltipItem) {
+                        // Only show tooltips for main data lines, not trend lines
+                        return !tooltipItem.dataset.label.includes('Trend');
+                    }
+                }
+            },
+            interaction: {
+                intersect: false,
+                mode: 'index'
+            }
+        }
+    });
+}
+
+// Socket.IO Integration
+function initSocketIO() {
+    const socket = io();
+    
+    // Handle new sensor readings
+    socket.on('reading:new', function(data) {
+        console.log('New reading received:', data);
+        // Update map markers
+        // Update charts
+        // Update stats if needed
+    });
+    
+    // Handle alert updates
+    socket.on('alert:opened', function(data) {
+        console.log('New alert:', data);
+        // Add new alert to the alerts list
+        addNewAlert(data);
+    });
+    
+    socket.on('alert:updated', function(data) {
+        console.log('Alert updated:', data);
+        // Update existing alert
+        updateAlert(data);
+    });
+    
+    // Handle risk updates
+    socket.on('risk:updated', function(data) {
+        console.log('Risk updated:', data);
+        // Update map risk tiles
+        // Update charts
+    });
+}
+
+function addNewAlert(alertData) {
+    const alertsList = document.getElementById('alerts-list');
+    const alertElement = createAlertElement(alertData);
+    alertsList.insertBefore(alertElement, alertsList.firstChild);
+    
+    // Remove oldest alert if more than 5
+    if (alertsList.children.length > 5) {
+        alertsList.removeChild(alertsList.lastChild);
+    }
+    
+    // Update alerts count
+    const alertsCount = document.getElementById('alerts-count');
+    alertsCount.textContent = parseInt(alertsCount.textContent) + 1;
+}
+
+function createAlertElement(alert) {
+    const div = document.createElement('div');
+    div.className = 'alert-item';
+    div.setAttribute('data-alert-id', alert.id);
+    
+    const severityClass = alert.severity === 'high' ? 'text-danger' : alert.severity === 'medium' ? 'text-warning' : 'text-info';
+    const iconClass = alert.severity === 'high' ? 'fas fa-exclamation-triangle' : alert.severity === 'medium' ? 'fas fa-exclamation-circle' : 'fas fa-info-circle';
+    
+    div.innerHTML = `
+        <div class="alert-icon">
+            <i class="${iconClass} ${severityClass}"></i>
+        </div>
+        <div class="alert-content">
+            <h6 class="alert-title">${alert.title}</h6>
+            <p class="alert-text">${alert.description}</p>
+            <div class="alert-meta">
+                <small class="text-muted">${alert.location}</small>
+                <small class="text-muted ms-2">${new Date(alert.timestamp).toLocaleTimeString()}</small>
+            </div>
+            ${alert.risk_probability > 0 ? `
+            <div class="risk-indicator">
+                <span class="badge bg-${alert.risk_probability > 70 ? 'danger' : alert.risk_probability > 40 ? 'warning' : 'info'}">
+                    ${alert.risk_probability}% Risk
+                </span>
+            </div>
+            ` : ''}
+        </div>
+    `;
+    
+    return div;
+}
+
+// Initialize everything when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    initMap();
+    initCharts();
+    initSocketIO();
+});
+</script>
+
+<style>
+/* Clean Modern Dashboard Design */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 20px;
+    height: calc(100vh - 200px);
+    min-height: 600px;
+}
+
+.dashboard-section {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border: 1px solid #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.map-section {
+    grid-row: 1 / 3;
+}
+
+.chart-section {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.alerts-section {
+    grid-column: 2;
+    grid-row: 2;
+}
+
+.notifications-section {
+    display: none; /* Hide for now to focus on main sections */
+}
+
+.section-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.section-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.section-content {
+    flex: 1;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Map Styling */
+#flood-risk-map {
+    height: 100%;
+    width: 100%;
+    border-radius: 0;
+}
+
+.leaflet-container {
+    height: 100%;
+    width: 100%;
+    border-radius: 0;
+}
+
+/* Chart Styling */
+#sensor-chart {
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 100%;
+}
+
+/* Chart Legend */
+.chart-legend {
+    display: flex;
+    gap: 12px;
+    font-size: 0.8rem;
+}
+
+.chart-legend .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: rgba(255,255,255,0.9);
+}
+
+.chart-legend .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+.chart-legend .legend-dot.rainfall { background-color: #1976d2; }
+.chart-legend .legend-dot.soil { background-color: #388e3c; }
+.chart-legend .legend-dot.groundwater { background-color: #0288d1; }
+
+/* Map Legend */
+.map-legend {
+    display: flex;
+    gap: 12px;
+    font-size: 0.8rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: rgba(255,255,255,0.9);
+}
+
+.legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+.legend-dot.high { background-color: #ff4757; }
+.legend-dot.medium { background-color: #ffa502; }
+.legend-dot.low { background-color: #2ed573; }
+
+/* Alerts Styling */
+.alerts-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+}
+
+.alert-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.alert-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.alert-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.alert-icon.text-danger { background-color: #ffe6e6; color: #dc3545; }
+.alert-icon.text-warning { background-color: #fff3cd; color: #ffc107; }
+.alert-icon.text-info { background-color: #d1ecf1; color: #0dcaf0; }
+
+.alert-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.alert-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #333;
+    margin: 0 0 4px 0;
+}
+
+.alert-desc {
+    font-size: 0.8rem;
+    color: #666;
+    margin: 0 0 6px 0;
+    line-height: 1.4;
+}
+
+.alert-meta {
+    display: flex;
+    gap: 12px;
+    font-size: 0.75rem;
+    color: #999;
+}
+
+.risk-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.risk-badge.risk-high { background-color: #ff4757; color: white; }
+.risk-badge.risk-medium { background-color: #ffa502; color: white; }
+.risk-badge.risk-low { background-color: #2ed573; color: white; }
+
+/* Stats Cards Styling */
+.stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 80px;
+}
+
+.stat-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--black-color);
+}
+
+.stat-icon i {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.stat-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.stat-number {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0;
+    color: #333;
+    line-height: 1.2;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: #666;
+    margin: 0;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Hide footer */
+footer {
+    display: none !important;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        height: auto;
+    }
+    
+    .map-section {
+        grid-row: 1;
+        min-height: 400px;
+    }
+    
+    .chart-section {
+        grid-column: 1;
+        grid-row: 2;
+        min-height: 300px;
+    }
+    
+    .alerts-section {
+        grid-column: 1;
+        grid-row: 3;
+        min-height: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-grid {
+        gap: 16px;
+    }
+    
+    .section-header {
+        padding: 12px 16px;
+    }
+    
+    .section-header h3 {
+        font-size: 1rem;
+    }
+    
+    .alerts-list {
+        padding: 12px;
+    }
+    
+    .map-legend {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+</style>
 {% endblock %}
