@@ -1,194 +1,178 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="dashboard-container">
-    <div class="container-fluid px-3">
+<div class="weather-dashboard">
+    <!-- Dynamic Background -->
+    <div class="weather-background">
+        <div class="storm-clouds"></div>
+        <div class="rain-effect"></div>
+    </div>
 
-
-        <!-- Stats Cards - First Row (System Stats) -->
-        <div class="row g-2 mb-2">
-            <div class="col-lg-3 col-md-6 col-sm-6 col-6">
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-microchip"></i>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="top-left">
+            <div class="app-logo">
+                <img src="{{ url_for('static', filename='images/flood.png') }}" alt="Flood Risk Logo" class="navbar-logo">
+                <div class="logo-text">
+                    <div class="brand-name">FloodRisk</div>
+                    <div class="brand-subtitle">Flood Risk Management System</div>
                     </div>
-                    <div class="stat-content">
-                        <h4 class="stat-number" id="active-sensors">{{ data.stats.active_sensors }}</h4>
-                        <p class="stat-label">Active Sensors</p>
                     </div>
                 </div>
+        <div class="top-center">
+            <div class="nav-icons">
+                <!-- Home Icon -->
+                <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9,22 9,12 15,12 15,22"></polyline>
+                </svg>
+                <!-- Search Icon -->
+                <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                <!-- Map Icon -->
+                <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                    <line x1="8" y1="2" x2="8" y2="18"></line>
+                    <line x1="16" y1="6" x2="16" y2="22"></line>
+                </svg>
+                <!-- Bell Icon -->
+                <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-6 col-6">
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-exclamation-triangle"></i>
                     </div>
-                    <div class="stat-content">
-                        <h4 class="stat-number" id="alerts-count">{{ data.stats.alerts }}</h4>
-                        <p class="stat-label">Alerts</p>
+        <div class="top-right">
+            <div class="datetime" id="current-datetime">28 Aug | 11:52</div>
+            <div class="user-profile">
+                <img src="{{ url_for('static', filename='images/dp.jpg') }}" alt="Profile" class="profile-img">
+                <div class="user-info">
+                    <div class="username">{{ current_user.username if current_user.is_authenticated else 'Guest' }}</div>
+                    <div class="user-role">Admin</div>
                     </div>
+                <div class="user-dropdown">
+                    <i class="fas fa-chevron-down"></i>
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('main.settings') }}" class="dropdown-item">
+                            <i class="fas fa-cog"></i>
+                            Settings
+                        </a>
+                        <a href="{{ url_for('auth.logout') }}" class="dropdown-item">
+                            <i class="fas fa-power-off"></i>
+                            Logout
+                        </a>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-6 col-6">
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h4 class="stat-number" id="system-uptime">{{ data.stats.system_uptime }}%</h4>
-                        <p class="stat-label">System Uptime</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6 col-6">
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-map-marker-alt"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h4 class="stat-number" id="monitored-areas">{{ data.stats.monitored_areas }}</h4>
-                        <p class="stat-label">Monitored Areas</p>
-                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- API Endpoints Cards - Second Row -->
-        <div class="row g-2 mb-3">
-            <div class="col-lg-3 col-md-6 col-sm-6 col-6">
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-cloud-rain"></i>
+    <!-- Main Weather Display -->
+    <div class="main-weather-section">
+        <div class="weather-info">
+            <div class="weather-condition">
+                <h1 class="condition-title">Thunderstorms</h1>
+                <p class="condition-subtitle">intense weather conditions</p>
+                <p class="condition-description">
+                    Heavy rain, strong winds, and occasional lightning expected. Sudden downpours may lead to localized flooding in some areas.
+                </p>
                     </div>
-                    <div class="stat-content">
-                        <h4 class="stat-number" id="rainfall-endpoint">/api/rainfall</h4>
-                        <p class="stat-label">Rainfall Endpoint</p>
+            <div class="temperature-display">
+                <span class="temperature">22°</span>
+                <span class="temp-variation">+/-</span>
                     </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6 col-6">
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-seedling"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h4 class="stat-number" id="soil-moisture-endpoint">/api/soil</h4>
-                        <p class="stat-label">Soil Moisture</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6 col-6">
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-mountain"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h4 class="stat-number" id="tilt-endpoint">/api/tilt</h4>
-                        <p class="stat-label">Tilt Sensor</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6 col-6">
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-water"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h4 class="stat-number" id="river-level-endpoint">/api/river</h4>
-                        <p class="stat-label">River Level</p>
-                    </div>
+            <div class="location-info">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>New York</span>
+                <div class="uv-index">UV Ind.: 2</div>
                 </div>
             </div>
         </div>
 
-        <!-- Clean Dashboard Grid -->
-        <div class="dashboard-grid">
-            <!-- Map Section -->
-            <div class="dashboard-section map-section">
-                <div class="section-header">
-                    <h3><i class="fas fa-map"></i> Flood Risk Map</h3>
-                    <div class="map-legend">
-                        <span class="legend-item"><span class="legend-dot high"></span> High Risk</span>
-                        <span class="legend-item"><span class="legend-dot medium"></span> Medium Risk</span>
-                        <span class="legend-item"><span class="legend-dot low"></span> Low Risk</span>
+    <!-- Right Side Panels -->
+    <div class="right-panels">
+        <!-- Wind Status Panel -->
+        <div class="glass-panel wind-panel">
+            <div class="panel-header">
+                <div class="header-left">
+                    <i class="fas fa-wind"></i>
+                    <span>Wind status</span>
                     </div>
+                <div class="wind-value">7.90 km/h</div>
                 </div>
-                <div class="section-content">
-                    <div id="flood-risk-map"></div>
+            <div class="wind-charts">
+                <div class="wind-line-chart">
+                    <canvas id="windLineChart"></canvas>
+                </div>
+                <div class="wind-bar-chart">
+                    <canvas id="windBarChart"></canvas>
+            </div>
                 </div>
             </div>
 
-            <!-- Chart Section -->
-            <div class="dashboard-section chart-section">
-                <div class="section-header">
-                    <h3><i class="fas fa-chart-line"></i> 24h Sensor Trends</h3>
-                    <div class="chart-legend">
-                        <span class="legend-item"><span class="legend-dot rainfall"></span> Rainfall (mm)</span>
-                        <span class="legend-item"><span class="legend-dot soil"></span> Soil Moisture (%)</span>
-                        <span class="legend-item"><span class="legend-dot groundwater"></span> Groundwater (m)</span>
-                    </div>
+        <!-- Sunrise/Sunset Panel -->
+        <div class="glass-panel sunrise-panel">
+            <div class="panel-header">
+                <div class="sunrise-info">
+                    <i class="fas fa-sun"></i>
+                    <span>Sunrise</span>
                 </div>
-                <div class="section-content">
-                    <canvas id="sensor-chart"></canvas>
+                <div class="sunset-info">
+                    <i class="fas fa-sun"></i>
+                    <span>✓ Sunset</span>
+                            </div>
+                                </div>
+            <div class="sun-arc-chart">
+                <canvas id="sunArcChart"></canvas>
+                    </div>
                 </div>
             </div>
 
-            <!-- Alerts Section -->
-            <div class="dashboard-section alerts-section">
-                <div class="section-header">
-                    <h3><i class="fas fa-bell"></i> Recent Alerts</h3>
+    <!-- 7-Day Forecast -->
+    <div class="forecast-section">
+        <div class="forecast-days">
+            <div class="forecast-day">
+                <div class="day-name">Monday</div>
+                <div class="day-temp">26°</div>
+                <div class="day-icon"><i class="fas fa-cloud"></i></div>
                 </div>
-                <div class="section-content">
-                    <div class="alerts-list" id="alerts-list">
-                        {% for alert in data.recent_alerts %}
-                        <div class="alert-item" data-alert-id="{{ alert.id }}">
-                            <div class="alert-icon {{ alert.color }}">
-                                <i class="{{ alert.icon }}"></i>
+            <div class="forecast-day">
+                <div class="day-name">Tuesday</div>
+                <div class="day-temp">28°</div>
+                <div class="day-icon"><i class="fas fa-cloud-sun"></i></div>
                             </div>
-                            <div class="alert-content">
-                                <div class="alert-title">{{ alert.title }}</div>
-                                <div class="alert-desc">{{ alert.description }}</div>
-                                <div class="alert-meta">
-                                    <span>{{ alert.location }}</span>
-                                    <span>{{ alert.timestamp.strftime('%H:%M') }}</span>
+            <div class="forecast-day">
+                <div class="day-name">Wednesday</div>
+                <div class="day-temp">24°</div>
+                <div class="day-icon"><i class="fas fa-bolt"></i></div>
                                 </div>
-                                {% if alert.risk_probability > 0 %}
-                                <div class="risk-badge risk-{{ 'high' if alert.risk_probability > 70 else 'medium' if alert.risk_probability > 40 else 'low' }}">
-                                    {{ alert.risk_probability }}%
-                                </div>
-                                {% endif %}
+            <div class="forecast-day active">
+                <div class="day-name">Thursday</div>
+                <div class="day-temp">26°</div>
+                <div class="day-icon"><i class="fas fa-cloud"></i></div>
                             </div>
+            <div class="forecast-day">
+                <div class="day-name">Friday</div>
+                <div class="day-temp">23°</div>
+                <div class="day-icon"><i class="fas fa-cloud-rain"></i></div>
                         </div>
-                        {% endfor %}
+            <div class="forecast-day">
+                <div class="day-name">Saturday</div>
+                <div class="day-temp">26°</div>
+                <div class="day-icon"><i class="fas fa-cloud"></i></div>
                     </div>
+            <div class="forecast-day">
+                <div class="day-name">Sunday</div>
+                <div class="day-temp">27°</div>
+                <div class="day-icon"><i class="fas fa-cloud-sun"></i></div>
                 </div>
             </div>
-
-            <!-- Notifications Section -->
-            <div class="dashboard-section notifications-section">
-                <div class="section-header">
-                    <h3><i class="fas fa-paper-plane"></i> Recent Notifications</h3>
-                </div>
-                <div class="section-content">
-                    <div class="notifications-list" id="notifications-list">
-                        {% for notification in data.recent_notifications %}
-                        <div class="notification-item" data-notification-id="{{ notification.id }}">
-                            <div class="notification-icon {{ notification.color }}">
-                                <i class="{{ notification.icon }}"></i>
-                            </div>
-                            <div class="notification-content">
-                                <div class="notification-title">{{ notification.type.upper() }}</div>
-                                <div class="notification-desc">{{ notification.message }}</div>
-                                <div class="notification-meta">
-                                    <span>{{ notification.recipients }} recipients</span>
-                                    <span>{{ notification.timestamp.strftime('%H:%M') }}</span>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
+        <div class="forecast-trend-line">
+            <svg id="trendLine" viewBox="0 0 400 50">
+                <path d="M0,40 Q50,20 100,30 T200,25 T300,35 T400,30" stroke="white" stroke-width="2" fill="none"/>
+            </svg>
         </div>
     </div>
 </div>
@@ -197,619 +181,1099 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
 
 <!-- Scripts -->
-<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 
 <script>
-// Dashboard Data
-const dashboardData = {{ data | tojson }};
-
-// Initialize Map
-function initMap() {
-    console.log('Initializing map...');
-    const mapContainer = document.getElementById('flood-risk-map');
-    if (!mapContainer) {
-        console.error('Map container not found!');
-        return;
-    }
-    
-    const map = L.map('flood-risk-map').setView([40.7128, -74.0060], 12);
-    
-    // Add base layer
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors',
-        maxZoom: 19
-    }).addTo(map);
-    
-    console.log('Map initialized successfully');
-    
-    // Add risk zones
-    dashboardData.map_data.risk_zones.forEach(zone => {
-        const color = zone.risk === 'high' ? '#dc3545' : zone.risk === 'medium' ? '#ffc107' : '#28a745';
-        L.circleMarker([zone.lat, zone.lng], {
-            radius: 15,
-            fillColor: color,
-            color: '#fff',
-            weight: 2,
-            opacity: 1,
-            fillOpacity: 0.8
-        }).addTo(map).bindPopup(`
-            <strong>${zone.name}</strong><br>
-            Risk Level: <span class="text-${zone.risk === 'high' ? 'danger' : zone.risk === 'medium' ? 'warning' : 'success'}">${zone.risk.toUpperCase()}</span>
-        `);
-    });
-    
-    // Add sensor markers
-    dashboardData.map_data.sensors.forEach(sensor => {
-        const iconColor = sensor.risk_level === 'high' ? '#dc3545' : sensor.risk_level === 'medium' ? '#ffc107' : '#28a745';
-        const icon = L.divIcon({
-            className: 'sensor-marker',
-            html: `<div style="background-color: ${iconColor}; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>`,
-            iconSize: [20, 20],
-            iconAnchor: [10, 10]
-        });
-        
-        L.marker([sensor.lat, sensor.lng], { icon: icon }).addTo(map).bindPopup(`
-            <div class="sensor-popup">
-                <h6><i class="fas fa-thermometer-half me-1"></i>Sensor ${sensor.id}</h6>
-                <p><strong>Type:</strong> ${sensor.type.replace('_', ' ').toUpperCase()}</p>
-                <p><strong>Reading:</strong> ${sensor.reading} ${getUnit(sensor.type)}</p>
-                <p><strong>Risk Level:</strong> <span class="text-${sensor.risk_level === 'high' ? 'danger' : sensor.risk_level === 'medium' ? 'warning' : 'success'}">${sensor.risk_level.toUpperCase()}</span></p>
-                <p><strong>Last Update:</strong> ${sensor.last_update.toLocaleString()}</p>
-            </div>
-        `);
-    });
-}
-
-function getUnit(type) {
-    const units = {
-        'rainfall': 'mm',
-        'soil_moisture': '%',
-        'tilt': '°',
-        'river_level': 'm'
-    };
-    return units[type] || '';
-}
-
-// Calculate trend line data
-function calculateTrendLine(data) {
-    const n = data.length;
-    const x = Array.from({length: n}, (_, i) => i);
-    
-    // Calculate linear regression
-    const sumX = x.reduce((a, b) => a + b, 0);
-    const sumY = data.reduce((a, b) => a + b, 0);
-    const sumXY = x.reduce((sum, xi, i) => sum + xi * data[i], 0);
-    const sumXX = x.reduce((sum, xi) => sum + xi * xi, 0);
-    
-    const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
-    const intercept = (sumY - slope * sumX) / n;
-    
-    return x.map(xi => slope * xi + intercept);
-}
-
-// Initialize Charts
-function initCharts() {
-    const ctx = document.getElementById('sensor-chart').getContext('2d');
-    
-    // Debug: Check data structure
-    console.log('Dashboard Data:', dashboardData);
-    console.log('Sensor Data:', dashboardData.sensor_data);
-    
-    // Ensure we have the data, create sample data if missing
-    if (!dashboardData.sensor_data) {
-        console.warn('No sensor data found, creating sample data');
-        dashboardData.sensor_data = {
-            labels: Array.from({length: 24}, (_, i) => `${i}:00`),
-            rainfall: Array.from({length: 24}, () => Math.random() * 10),
-            soil_moisture: Array.from({length: 24}, () => Math.random() * 40 + 30),
-            groundwater: Array.from({length: 24}, () => Math.random() * 10 + 5)
-        };
-    }
-    
-    // Calculate trend lines
-    const rainfallTrend = calculateTrendLine(dashboardData.sensor_data.rainfall);
-    const soilTrend = calculateTrendLine(dashboardData.sensor_data.soil_moisture);
-    const groundwaterTrend = calculateTrendLine(dashboardData.sensor_data.groundwater);
-    
-    new Chart(ctx, {
+// Initialize Weather Charts
+function initWeatherCharts() {
+    // Wind Line Chart
+    const windLineCtx = document.getElementById('windLineChart').getContext('2d');
+    new Chart(windLineCtx, {
         type: 'line',
         data: {
-            labels: dashboardData.sensor_data.labels,
-            datasets: [
-                {
-                    label: 'Rainfall (mm)',
-                    data: dashboardData.sensor_data.rainfall,
-                    borderColor: '#1976d2',
-                    backgroundColor: 'rgba(25, 118, 210, 0.1)',
-                    tension: 0.4,
-                    pointRadius: 3,
-                    pointHoverRadius: 5
-                },
-                {
-                    label: 'Rainfall Trend',
-                    data: rainfallTrend,
-                    borderColor: '#1976d2',
+            labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'],
+            datasets: [{
+                data: [5.2, 6.8, 7.9, 8.1, 7.3, 6.5],
+                borderColor: 'rgba(255,255,255,0.8)',
                     backgroundColor: 'transparent',
-                    borderDash: [5, 5],
-                    pointRadius: 0,
-                    pointHoverRadius: 0,
-                    tension: 0
-                },
-                {
-                    label: 'Soil Moisture (%)',
-                    data: dashboardData.sensor_data.soil_moisture,
-                    borderColor: '#388e3c',
-                    backgroundColor: 'rgba(56, 142, 60, 0.1)',
                     tension: 0.4,
-                    pointRadius: 3,
-                    pointHoverRadius: 5
-                },
-                {
-                    label: 'Soil Moisture Trend',
-                    data: soilTrend,
-                    borderColor: '#388e3c',
-                    backgroundColor: 'transparent',
-                    borderDash: [5, 5],
                     pointRadius: 0,
-                    pointHoverRadius: 0,
-                    tension: 0
-                },
-                {
-                    label: 'Groundwater (m)',
-                    data: dashboardData.sensor_data.groundwater,
-                    borderColor: '#0288d1',
-                    backgroundColor: 'rgba(2, 136, 209, 0.1)',
-                    tension: 0.4,
-                    pointRadius: 3,
-                    pointHoverRadius: 5
-                },
-                {
-                    label: 'Groundwater Trend',
-                    data: groundwaterTrend,
-                    borderColor: '#0288d1',
-                    backgroundColor: 'transparent',
-                    borderDash: [5, 5],
-                    pointRadius: 0,
-                    pointHoverRadius: 0,
-                    tension: 0
-                }
-            ]
+                pointHoverRadius: 3
+            }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
             scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        color: 'rgba(0,0,0,0.1)'
-                    }
-                },
-                x: {
-                    grid: {
-                        color: 'rgba(0,0,0,0.1)'
-                    }
-                }
-            },
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    filter: function(tooltipItem) {
-                        // Only show tooltips for main data lines, not trend lines
-                        return !tooltipItem.dataset.label.includes('Trend');
-                    }
-                }
-            },
-            interaction: {
-                intersect: false,
-                mode: 'index'
+                x: { display: false },
+                y: { display: false }
             }
+        }
+    });
+
+    // Wind Bar Chart
+    const windBarCtx = document.getElementById('windBarChart').getContext('2d');
+    new Chart(windBarCtx, {
+        type: 'bar',
+        data: {
+            labels: ['1', '2', '3', '4', '5', '6', '7', '8'],
+            datasets: [{
+                data: [3, 5, 4, 7, 6, 8, 5, 4],
+                backgroundColor: 'rgba(255,255,255,0.3)',
+                borderColor: 'rgba(255,255,255,0.5)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { display: false },
+                y: { display: false }
+            }
+        }
+    });
+
+    // Sun Arc Chart
+    const sunArcCtx = document.getElementById('sunArcChart').getContext('2d');
+    new Chart(sunArcCtx, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [75, 25],
+                backgroundColor: ['rgba(255,255,255,0.1)', 'transparent'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '80%',
+            plugins: { legend: { display: false } }
         }
     });
 }
 
-// Socket.IO Integration
-function initSocketIO() {
-    const socket = io();
-    
-    // Handle new sensor readings
-    socket.on('reading:new', function(data) {
-        console.log('New reading received:', data);
-        // Update map markers
-        // Update charts
-        // Update stats if needed
-    });
-    
-    // Handle alert updates
-    socket.on('alert:opened', function(data) {
-        console.log('New alert:', data);
-        // Add new alert to the alerts list
-        addNewAlert(data);
-    });
-    
-    socket.on('alert:updated', function(data) {
-        console.log('Alert updated:', data);
-        // Update existing alert
-        updateAlert(data);
-    });
-    
-    // Handle risk updates
-    socket.on('risk:updated', function(data) {
-        console.log('Risk updated:', data);
-        // Update map risk tiles
-        // Update charts
-    });
+// Update datetime
+function updateDateTime() {
+    const now = new Date();
+    const options = { 
+        day: '2-digit', 
+        month: 'short', 
+        hour: '2-digit', 
+        minute: '2-digit',
+        hour12: false 
+    };
+    const dateTimeString = now.toLocaleDateString('en-GB', options).replace(',', ' |');
+    document.getElementById('current-datetime').textContent = dateTimeString;
 }
 
-function addNewAlert(alertData) {
-    const alertsList = document.getElementById('alerts-list');
-    const alertElement = createAlertElement(alertData);
-    alertsList.insertBefore(alertElement, alertsList.firstChild);
+// Dropdown functionality
+function initDropdown() {
+    const userDropdown = document.querySelector('.user-dropdown');
+    const dropdownMenu = document.querySelector('.dropdown-menu');
     
-    // Remove oldest alert if more than 5
-    if (alertsList.children.length > 5) {
-        alertsList.removeChild(alertsList.lastChild);
+    if (userDropdown && dropdownMenu) {
+        let isOpen = false;
+        
+        // Toggle dropdown on click
+        userDropdown.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Dropdown clicked, current state:', isOpen);
+            isOpen = !isOpen;
+            
+            if (isOpen) {
+                dropdownMenu.classList.add('show');
+                console.log('Dropdown opened');
+            } else {
+                dropdownMenu.classList.remove('show');
+                console.log('Dropdown closed');
+            }
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!userDropdown.contains(e.target) && isOpen) {
+                isOpen = false;
+                dropdownMenu.classList.remove('show');
+            }
+        });
+        
+        // Prevent dropdown from closing when clicking inside it
+        dropdownMenu.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
     }
-    
-    // Update alerts count
-    const alertsCount = document.getElementById('alerts-count');
-    alertsCount.textContent = parseInt(alertsCount.textContent) + 1;
-}
-
-function createAlertElement(alert) {
-    const div = document.createElement('div');
-    div.className = 'alert-item';
-    div.setAttribute('data-alert-id', alert.id);
-    
-    const severityClass = alert.severity === 'high' ? 'text-danger' : alert.severity === 'medium' ? 'text-warning' : 'text-info';
-    const iconClass = alert.severity === 'high' ? 'fas fa-exclamation-triangle' : alert.severity === 'medium' ? 'fas fa-exclamation-circle' : 'fas fa-info-circle';
-    
-    div.innerHTML = `
-        <div class="alert-icon">
-            <i class="${iconClass} ${severityClass}"></i>
-        </div>
-        <div class="alert-content">
-            <h6 class="alert-title">${alert.title}</h6>
-            <p class="alert-text">${alert.description}</p>
-            <div class="alert-meta">
-                <small class="text-muted">${alert.location}</small>
-                <small class="text-muted ms-2">${new Date(alert.timestamp).toLocaleTimeString()}</small>
-            </div>
-            ${alert.risk_probability > 0 ? `
-            <div class="risk-indicator">
-                <span class="badge bg-${alert.risk_probability > 70 ? 'danger' : alert.risk_probability > 40 ? 'warning' : 'info'}">
-                    ${alert.risk_probability}% Risk
-                </span>
-            </div>
-            ` : ''}
-        </div>
-    `;
-    
-    return div;
 }
 
 // Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    initMap();
-    initCharts();
-    initSocketIO();
+    initWeatherCharts();
+    updateDateTime();
+    initDropdown();
+    
+    // Fix layout for high-resolution laptops
+    function fixHighResLayout() {
+        const screenWidth = window.screen.width;
+        const screenHeight = window.screen.height;
+        
+        if (screenWidth >= 2000) {
+            document.body.classList.add('high-res-layout');
+        }
+        
+        // Specific fix for MSI Cyborg 16 A12V
+        if (screenWidth === 2560 && screenHeight === 1600) {
+            document.body.classList.add('msi-cyborg-layout');
+        }
+    }
+    
+    // Run on page load
+    fixHighResLayout();
+    
+    // Run on window resize
+    window.addEventListener('resize', fixHighResLayout);
+    
+    // Update datetime every minute
+    setInterval(updateDateTime, 60000);
 });
 </script>
 
 <style>
-/* Clean Modern Dashboard Design */
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 20px;
-    height: calc(100vh - 200px);
-    min-height: 600px;
+/* Glassmorphism Weather Dashboard */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-.dashboard-section {
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    border: 1px solid #f0f0f0;
-    display: flex;
-    flex-direction: column;
+body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Inter', Roboto, sans-serif;
+    background: url('{{ url_for("static", filename="images/bg.jpg") }}') center/cover no-repeat;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.weather-dashboard {
+    position: relative;
+    min-height: 100vh;
+    background: url('{{ url_for("static", filename="images/bg.jpg") }}') center/cover no-repeat;
+    color: white;
+}
+
+/* Dynamic Background */
+.weather-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
     overflow: hidden;
 }
 
-.map-section {
-    grid-row: 1 / 3;
+.storm-clouds {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 30%, rgba(255,255,255,0.08) 0%, transparent 50%),
+        radial-gradient(circle at 40% 60%, rgba(255,255,255,0.06) 0%, transparent 50%),
+        radial-gradient(circle at 70% 80%, rgba(255,255,255,0.04) 0%, transparent 50%);
+    animation: cloudMove 20s ease-in-out infinite;
 }
 
-.chart-section {
-    grid-column: 2;
-    grid-row: 1;
+.rain-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%);
+    animation: rainFall 2s linear infinite;
+    opacity: 0;
 }
 
-.alerts-section {
-    grid-column: 2;
-    grid-row: 2;
+@keyframes cloudMove {
+    0%, 100% { transform: translateX(0) translateY(0); }
+    25% { transform: translateX(-10px) translateY(-5px); }
+    50% { transform: translateX(10px) translateY(-10px); }
+    75% { transform: translateX(-5px) translateY(-15px); }
 }
 
-.notifications-section {
-    display: none; /* Hide for now to focus on main sections */
+@keyframes rainFall {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100vh); }
 }
 
-.section-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 16px 20px;
+/* Top Bar */
+.top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    background: transparent;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    z-index: 1000;
 }
 
-.section-header h3 {
-    margin: 0;
-    font-size: 1.1rem;
-    font-weight: 600;
+.top-left {
+    margin-left: 0;
+}
+
+.top-left .app-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.navbar-logo {
+    height: 32px;
+    width: auto;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.brand-name {
+    font-family: 'Brushstrike', cursive;
+    font-size: 1.2rem;
+    font-weight: normal;
+    color: white;
+    line-height: 1.1;
+    text-transform: uppercase;
+    letter-spacing: 7px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    width: 100%;
+    display: block;
+}
+
+.brand-subtitle {
+    font-size: 0.6rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 400;
+    line-height: 1;
+    margin-top: 1px;
+    width: 100%;
+    display: block;
+}
+
+.top-center .nav-icons {
+    display: flex;
+    gap: 25px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border-radius: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 12px 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.nav-icon {
+    width: 18px;
+    height: 18px;
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.nav-icon:hover {
+    color: white;
+    transform: scale(1.1);
+}
+
+.top-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.datetime {
+    font-size: 14px;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Inter', Roboto, sans-serif;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.user-profile {
     display: flex;
     align-items: center;
     gap: 8px;
+    cursor: pointer;
+    position: relative;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border-radius: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 12px 20px 12px 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    height: 48px;
+    z-index: 1000;
 }
 
-.section-content {
-    flex: 1;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-/* Map Styling */
-#flood-risk-map {
-    height: 100%;
-    width: 100%;
-    border-radius: 0;
-}
-
-.leaflet-container {
-    height: 100%;
-    width: 100%;
-    border-radius: 0;
-}
-
-/* Chart Styling */
-#sensor-chart {
-    width: 100% !important;
-    height: 100% !important;
-    max-height: 100%;
-}
-
-/* Chart Legend */
-.chart-legend {
-    display: flex;
-    gap: 12px;
-    font-size: 0.8rem;
-}
-
-.chart-legend .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    color: rgba(255,255,255,0.9);
-}
-
-.chart-legend .legend-dot {
-    width: 8px;
-    height: 8px;
+.profile-img {
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    border: 1px solid rgba(255,255,255,0.3);
-}
-
-.chart-legend .legend-dot.rainfall { background-color: #1976d2; }
-.chart-legend .legend-dot.soil { background-color: #388e3c; }
-.chart-legend .legend-dot.groundwater { background-color: #0288d1; }
-
-/* Map Legend */
-.map-legend {
-    display: flex;
-    gap: 12px;
-    font-size: 0.8rem;
-}
-
-.legend-item {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    color: rgba(255,255,255,0.9);
-}
-
-.legend-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    border: 1px solid rgba(255,255,255,0.3);
-}
-
-.legend-dot.high { background-color: #ff4757; }
-.legend-dot.medium { background-color: #ffa502; }
-.legend-dot.low { background-color: #2ed573; }
-
-/* Alerts Styling */
-.alerts-list {
-    flex: 1;
-    overflow-y: auto;
-    padding: 16px;
-}
-
-.alert-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 12px 0;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.alert-item:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-}
-
-.alert-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    object-fit: cover;
+    object-position: center;
     flex-shrink: 0;
 }
 
-.alert-icon.text-danger { background-color: #ffe6e6; color: #dc3545; }
-.alert-icon.text-warning { background-color: #fff3cd; color: #ffc107; }
-.alert-icon.text-info { background-color: #d1ecf1; color: #0dcaf0; }
-
-.alert-content {
-    flex: 1;
-    min-width: 0;
-}
-
-.alert-title {
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: #333;
-    margin: 0 0 4px 0;
-}
-
-.alert-desc {
-    font-size: 0.8rem;
-    color: #666;
-    margin: 0 0 6px 0;
-    line-height: 1.4;
-}
-
-.alert-meta {
+.user-info {
     display: flex;
-    gap: 12px;
-    font-size: 0.75rem;
-    color: #999;
+    flex-direction: column;
 }
 
-.risk-badge {
-    display: inline-block;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 0.7rem;
-    font-weight: 600;
+.username {
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.user-role {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.user-dropdown {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background 0.3s ease;
+}
+
+.user-dropdown:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.user-dropdown i {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.8);
+    transition: transform 0.3s ease;
+    margin-left: 8px;
+}
+
+.user-dropdown:hover i {
+    transform: rotate(180deg);
+    color: white;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 8px 0;
+    min-width: 140px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 999;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     margin-top: 4px;
 }
 
-.risk-badge.risk-high { background-color: #ff4757; color: white; }
-.risk-badge.risk-medium { background-color: #ffa502; color: white; }
-.risk-badge.risk-low { background-color: #2ed573; color: white; }
+.dropdown-menu.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
 
-/* Stats Cards Styling */
-.stat-card {
-    background: white;
-    border-radius: 12px;
-    padding: 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    border: 1px solid #f0f0f0;
+.dropdown-item {
     display: flex;
     align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    margin: 0;
+}
+
+.dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    transform: none;
+}
+
+.dropdown-item i {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.9);
+    width: 16px;
+    text-align: center;
+}
+
+/* Main Weather Section */
+.main-weather-section {
+    position: relative;
+    padding: 80px 0 50px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    min-height: 100vh;
+}
+
+.weather-info {
+    text-align: left;
+    max-width: 450px;
+    padding: 0 0;
+    margin-top: 20px;
+    margin-left: 30px;
+    width: calc(100vw - 480px);
+    min-width: 250px;
+}
+
+/* Force balanced layout for high-res laptops */
+@media (min-width: 2000px) {
+    .weather-info {
+        width: 50vw !important;
+        max-width: 1000px !important;
+        margin-left: 60px !important;
+        padding: 0 60px !important;
+    }
+    
+    .right-panels {
+        width: 25vw !important;
+        max-width: 450px !important;
+        right: 60px !important;
+    }
+    
+    .top-bar {
+        padding: 0 60px !important;
+    }
+    
+    .top-left {
+        margin-left: 60px !important;
+    }
+    
+    .forecast-section {
+        left: 60px !important;
+        right: 60px !important;
+    }
+}
+
+/* JavaScript-triggered layout fixes */
+.high-res-layout .weather-info {
+    width: 50vw !important;
+    max-width: 1000px !important;
+    margin-left: 60px !important;
+    padding: 0 60px !important;
+}
+
+.high-res-layout .right-panels {
+    width: 25vw !important;
+    max-width: 450px !important;
+    right: 60px !important;
+}
+
+.high-res-layout .top-bar {
+    padding: 0 60px !important;
+}
+
+.high-res-layout .top-left {
+    margin-left: 60px !important;
+}
+
+.high-res-layout .forecast-section {
+    left: 60px !important;
+    right: 60px !important;
+}
+
+/* Specific MSI Cyborg 16 A12V layout */
+.msi-cyborg-layout .weather-info {
+    width: 45vw !important;
+    max-width: 1200px !important;
+    margin-left: 80px !important;
+    padding: 0 80px !important;
+}
+
+.msi-cyborg-layout .right-panels {
+    width: 30vw !important;
+    max-width: 500px !important;
+    right: 80px !important;
+}
+
+.msi-cyborg-layout .top-bar {
+    padding: 0 80px !important;
+}
+
+.msi-cyborg-layout .top-left {
+    margin-left: 80px !important;
+}
+
+.msi-cyborg-layout .forecast-section {
+    left: 80px !important;
+    right: 80px !important;
+}
+
+.condition-title {
+    font-size: 2.8rem;
+    font-weight: 400;
+    margin-bottom: 8px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.condition-subtitle {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 15px;
+    font-weight: 400;
+}
+
+.condition-description {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.4;
+    margin-bottom: 25px;
+    max-width: 400px;
+}
+
+.temperature-display {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    margin-bottom: 0px;
+}
+
+.temperature {
+    font-size: 3.2rem;
+    font-weight: 300;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Inter', Roboto, sans-serif;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.temp-variation {
+    font-size: 1rem;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Inter', Roboto, sans-serif;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 15px;
+}
+
+.location-info {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
     gap: 12px;
-    height: 80px;
+    font-size: 0.9rem;
 }
 
-.stat-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
+.location-info i {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.uv-index {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Inter', Roboto, sans-serif;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Right Side Panels */
+.right-panels {
+    position: fixed;
+    top: 100px;
+    right: 30px;
+    width: 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 100;
+    max-width: calc(100vw - 60%);
+}
+
+.glass-panel {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border-radius: 12px;
+    border: none;
+    padding: 14px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    min-height: 110px;
+}
+
+.panel-header {
     display: flex;
     align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    color: var(--black-color);
+    justify-content: space-between;
+    gap: 6px;
+    margin-bottom: 10px;
+    font-size: 11px;
+    font-weight: 400;
 }
 
-.stat-icon i {
-    font-size: 0.9rem;
-    opacity: 0.8;
+.panel-header i {
+    color: rgba(255, 255, 255, 0.8);
 }
 
-.stat-content {
-    flex: 1;
-    min-width: 0;
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-.stat-number {
-    font-size: 1.2rem;
-    font-weight: 700;
-    margin: 0;
-    color: #333;
-    line-height: 1.2;
+.wind-value {
+    font-size: 10px;
+    font-weight: 400;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Inter', Roboto, sans-serif;
+    text-align: right;
 }
 
-.stat-label {
-    font-size: 0.75rem;
-    color: #666;
-    margin: 0;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+.wind-charts {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
-/* Hide footer */
-footer {
-    display: none !important;
+.wind-line-chart,
+.wind-bar-chart {
+    height: 45px;
+}
+
+.sunrise-panel .panel-header {
+    justify-content: space-between;
+}
+
+.sunrise-info,
+.sunset-info {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+}
+
+.sun-arc-chart {
+    height: 85px;
+    margin-top: 7px;
+}
+
+/* 7-Day Forecast */
+.forecast-section {
+    position: fixed;
+    bottom: 30px;
+    left: 0;
+    right: 0;
+    background: transparent;
+    border-radius: 15px;
+    padding: 15px;
+    z-index: 100;
+    margin: 0 30px;
+}
+
+.forecast-days {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.forecast-day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 10px;
+    border-radius: 15px;
+    transition: background 0.3s ease;
+    cursor: pointer;
+}
+
+.forecast-day:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.forecast-day.active {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.day-name {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 400;
+}
+
+.day-temp {
+    font-size: 18px;
+    font-weight: 400;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Inter', Roboto, sans-serif;
+}
+
+.day-icon {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.forecast-trend-line {
+    height: 40px;
+    width: 100%;
+}
+
+#trendLine {
+    width: 100%;
+    height: 100%;
 }
 
 /* Responsive Design */
+@media (min-width: 2560px) {
+    .top-bar {
+        padding: 0 40px;
+    }
+    
+    .top-left {
+        margin-left: 40px;
+    }
+    
+    .weather-info {
+        margin-left: 40px;
+        padding: 0 40px;
+        max-width: 800px;
+    }
+    
+    .right-panels {
+        width: 350px;
+        right: 40px;
+    }
+    
+    .forecast-section {
+        left: 40px;
+        right: 40px;
+    }
+}
+
+@media (max-width: 2559px) and (min-width: 2000px) {
+    .top-bar {
+        padding: 0 35px;
+    }
+    
+    .top-left {
+        margin-left: 35px;
+    }
+    
+    .weather-info {
+        margin-left: 35px;
+        padding: 0 35px;
+        max-width: 700px;
+    }
+    
+    .right-panels {
+        width: 320px;
+        right: 35px;
+    }
+    
+    .forecast-section {
+        left: 35px;
+        right: 35px;
+    }
+}
+
+@media (max-width: 1999px) and (min-width: 1600px) {
+    .top-bar {
+        padding: 0 20px;
+    }
+    
+    .top-left {
+        margin-left: 0;
+    }
+    
+    .weather-info {
+        margin-left: 30px;
+        padding: 0 0;
+        max-width: 450px;
+        width: calc(100vw - 480px);
+    }
+    
+    .right-panels {
+        width: 220px;
+        right: 30px;
+        gap: 8px;
+    }
+    
+    .forecast-section {
+        margin: 0 30px;
+    }
+}
+
+/* Specific fix for MSI Cyborg 16 A12V and high-res laptops */
+@media (min-width: 2000px) and (min-aspect-ratio: 16/10) {
+    .top-bar {
+        padding: 0 60px;
+    }
+    
+    .top-left {
+        margin-left: 60px;
+    }
+    
+    .weather-info {
+        margin-left: 60px;
+        padding: 0 60px;
+        max-width: 1000px;
+        width: calc(100vw - 600px);
+    }
+    
+    .right-panels {
+        width: 450px;
+        right: 60px;
+    }
+    
+    .forecast-section {
+        left: 60px;
+        right: 60px;
+    }
+}
+
+/* Alternative fix using viewport units */
+@media (min-width: 2000px) {
+    .weather-info {
+        width: 50vw;
+        max-width: 1000px;
+    }
+    
+    .right-panels {
+        width: 25vw;
+        max-width: 450px;
+    }
+}
+
+@media (max-width: 1400px) {
+    .top-bar {
+        padding: 0 20px;
+    }
+    
+    .top-left {
+        margin-left: 0;
+    }
+    
+    .weather-info {
+        margin-left: 30px;
+        padding: 0 0;
+        width: calc(100vw - 480px);
+    }
+    
+    .right-panels {
+        width: 220px;
+        right: 30px;
+        gap: 8px;
+    }
+    
+    .forecast-section {
+        margin: 0 30px;
+    }
+}
+
 @media (max-width: 1200px) {
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto auto auto;
-        height: auto;
+    .top-bar {
+        padding: 0 20px;
     }
     
-    .map-section {
-        grid-row: 1;
-        min-height: 400px;
+    .top-left {
+        margin-left: 0;
     }
     
-    .chart-section {
-        grid-column: 1;
-        grid-row: 2;
-        min-height: 300px;
+    .weather-info {
+        margin-left: 30px;
+        padding: 0 20px;
     }
     
-    .alerts-section {
-        grid-column: 1;
-        grid-row: 3;
-        min-height: 300px;
+    .right-panels {
+        width: 250px;
+        right: 20px;
+    }
+    
+    .forecast-section {
+        left: 20px;
+        right: 20px;
+    }
+}
+
+@media (max-width: 1366px) {
+    .top-bar {
+        padding: 0 20px;
+    }
+    
+    .top-left {
+        margin-left: 0;
+    }
+    
+    .weather-info {
+        margin-left: 30px;
+        padding: 0 20px;
+        width: calc(100vw - 350px);
+        max-width: 500px;
+    }
+    
+    .right-panels {
+        width: 250px;
+        right: 20px;
+    }
+    
+    .forecast-section {
+        left: 20px;
+        right: 20px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .top-bar {
+        padding: 0 18px;
+    }
+    
+    .top-left {
+        margin-left: 18px;
+    }
+    
+    .weather-info {
+        margin-left: 30px;
+        padding: 0 18px;
+        width: calc(100vw - 300px);
+        max-width: 450px;
+    }
+    
+    .right-panels {
+        width: 240px;
+        right: 18px;
+    }
+    
+    .forecast-section {
+        left: 18px;
+        right: 18px;
     }
 }
 
 @media (max-width: 768px) {
-    .dashboard-grid {
-        gap: 16px;
+    .top-bar {
+        padding: 0 15px;
     }
     
-    .section-header {
-        padding: 12px 16px;
+    .top-left {
+        margin-left: 15px;
     }
     
-    .section-header h3 {
-        font-size: 1rem;
+    .weather-info {
+        margin-left: 30px;
+        padding: 0 15px;
     }
     
-    .alerts-list {
-        padding: 12px;
+    .top-center .nav-icons {
+        gap: 15px;
     }
     
-    .map-legend {
-        flex-direction: column;
-        gap: 8px;
+    .top-center .nav-icons i {
+        font-size: 16px;
+    }
+    
+    .condition-title {
+        font-size: 2.5rem;
+    }
+    
+    .temperature {
+        font-size: 4rem;
+    }
+    
+    .right-panels {
+        position: relative;
+        width: 100%;
+        right: 0;
+        top: 0;
+        padding: 15px;
+        flex-direction: row;
+        overflow-x: auto;
+    }
+    
+    .glass-panel {
+        min-width: 200px;
+        flex-shrink: 0;
+    }
+    
+    .forecast-section {
+        position: relative;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: 15px;
+    }
+    
+    .forecast-days {
+        gap: 10px;
+    }
+    
+    .forecast-day {
+        min-width: 80px;
+    }
+}
+
+@media (max-width: 480px) {
+    .top-bar {
+        padding: 0 10px;
+    }
+    
+    .top-left {
+        margin-left: 10px;
+    }
+    
+    .weather-info {
+        margin-left: 30px;
+        padding: 0 10px;
+    }
+    
+    .main-weather-section {
+        padding: 80px 0 30px;
+    }
+    
+    .condition-title {
+        font-size: 2rem;
+    }
+    
+    .temperature {
+        font-size: 3rem;
+    }
+    
+    .right-panels {
+        padding: 10px;
+    }
+    
+    .forecast-section {
+        margin: 10px;
+    }
+    
+    .forecast-days {
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+    
+    .forecast-day {
+        min-width: 60px;
+        padding: 5px;
     }
 }
 </style>

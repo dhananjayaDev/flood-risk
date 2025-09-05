@@ -151,6 +151,12 @@ def home():
     
     return render_template('home.html', title='Dashboard', user=current_user, data=dashboard_data)
 
+@bp.route('/settings')
+@login_required
+def settings():
+    """User settings page"""
+    return render_template('settings.html', title='Settings', user=current_user)
+
 # SocketIO Event Handlers
 @socketio.on('connect')
 def handle_connect():
