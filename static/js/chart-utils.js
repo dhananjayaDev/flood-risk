@@ -1,5 +1,116 @@
 // Chart Utilities Module
 
+// Tooltip Style Presets
+const TOOLTIP_STYLES = {
+    glassmorphism: {
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        titleColor: 'white',
+        bodyColor: 'white',
+        borderColor: 'rgba(255, 255, 255, 0.2)',
+        borderWidth: 1,
+        borderRadius: 6,
+        padding: 8
+    },
+    minimal: {
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        titleColor: '#333',
+        bodyColor: '#666',
+        borderColor: 'rgba(0, 0, 0, 0.1)',
+        borderWidth: 1,
+        borderRadius: 8,
+        padding: 12
+    },
+    darkModern: {
+        backgroundColor: 'rgba(20, 20, 20, 0.95)',
+        titleColor: '#fff',
+        bodyColor: '#ccc',
+        borderColor: 'rgba(255, 255, 255, 0.1)',
+        borderWidth: 0,
+        borderRadius: 12,
+        padding: 10
+    },
+    coloredAccent: {
+        backgroundColor: 'rgba(59, 130, 246, 0.95)',
+        titleColor: 'white',
+        bodyColor: 'rgba(255, 255, 255, 0.9)',
+        borderColor: 'rgba(59, 130, 246, 1)',
+        borderWidth: 0,
+        borderRadius: 8,
+        padding: 10
+    },
+    subtleGlass: {
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+        titleColor: 'white',
+        bodyColor: 'rgba(255, 255, 255, 0.8)',
+        borderColor: 'rgba(255, 255, 255, 0.3)',
+        borderWidth: 1,
+        borderRadius: 10,
+        padding: 8
+    }
+};
+
+// Function to get tooltip configuration
+function getTooltipConfig(style = 'glassmorphism') {
+    const baseConfig = {
+        enabled: true,
+        displayColors: false,
+        position: 'nearest',
+        xAlign: 'center',
+        yAlign: 'bottom',
+        caretSize: 4,
+        cornerRadius: 8,
+        titleSpacing: 4,
+        titleMarginBottom: 6,
+        bodySpacing: 4,
+        usePointStyle: false,
+        rtl: false,
+        textDirection: 'ltr',
+        animation: {
+            duration: 200,
+            easing: 'easeOutQuart'
+        },
+        filter: function(tooltipItem) {
+            return true;
+        },
+        titleFont: {
+            family: 'Segoe UI, -apple-system, BlinkMacSystemFont, Inter, Roboto, sans-serif',
+            size: 10,
+            weight: 500
+        },
+        bodyFont: {
+            family: 'Segoe UI, -apple-system, BlinkMacSystemFont, Inter, Roboto, sans-serif',
+            size: 9,
+            weight: 400
+        },
+        callbacks: {
+            title: function(context) {
+                const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+                return days[context[0].dataIndex];
+            },
+            label: function(context) {
+                return `Height: ${context.parsed.y}m`;
+            }
+        }
+    };
+    
+    return { ...baseConfig, ...TOOLTIP_STYLES[style] };
+}
+
+// Demo function to change tooltip style (for testing)
+function changeTooltipStyle(style) {
+    if (window.riverHeightChart && TOOLTIP_STYLES[style]) {
+        window.riverHeightChart.options.plugins.tooltip = getTooltipConfig(style);
+        window.riverHeightChart.update();
+        console.log(`Tooltip style changed to: ${style}`);
+    } else {
+        console.log('Available styles:', Object.keys(TOOLTIP_STYLES));
+    }
+}
+
+// Make functions globally available for testing
+window.changeTooltipStyle = changeTooltipStyle;
+window.TOOLTIP_STYLES = TOOLTIP_STYLES;
+
 // Initialize Weather Charts
 function initWeatherCharts() {
     // Wind Line Chart
@@ -113,40 +224,8 @@ function initRiverHeightChart() {
                 legend: {
                     display: false
                 },
-                tooltip: {
-                    enabled: true,
-                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                    titleColor: 'white',
-                    bodyColor: 'white',
-                    borderColor: 'rgba(255, 255, 255, 0.2)',
-                    borderWidth: 1,
-                    borderRadius: 6,
-                    padding: 8,
-                    titleFont: {
-                        family: 'Segoe UI, -apple-system, BlinkMacSystemFont, Inter, Roboto, sans-serif',
-                        size: 10,
-                        weight: 500
-                    },
-                    bodyFont: {
-                        family: 'Segoe UI, -apple-system, BlinkMacSystemFont, Inter, Roboto, sans-serif',
-                        size: 9,
-                        weight: 400
-                    },
-                    displayColors: false,
-                    position: 'nearest',
-                    xAlign: 'center',
-                    yAlign: 'bottom',
-                    caretSize: 4,
-                    callbacks: {
-                        title: function(context) {
-                            const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-                            return days[context[0].dataIndex];
-                        },
-                        label: function(context) {
-                            return context.parsed.y + 'm';
-                        }
-                    }
-                }
+                // Change tooltip style here: 'glassmorphism', 'minimal', 'darkModern', 'coloredAccent', 'subtleGlass'
+                tooltip: getTooltipConfig('glassmorphism')
             },
             scales: {
                 x: {
@@ -197,6 +276,9 @@ function initRiverHeightChart() {
             }
         }
     });
+    
+    // Make chart globally accessible for tooltip style changes
+    window.riverHeightChart = riverHeightChart;
 }
 
 // Add custom labels to charts
