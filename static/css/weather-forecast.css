@@ -28,6 +28,13 @@
     border-radius: 15px;
     transition: background 0.3s ease;
     cursor: pointer;
+    width: 80px;
+    height: 100px;
+    min-width: 80px;
+    min-height: 100px;
+    max-width: 80px;
+    max-height: 100px;
+    box-sizing: border-box;
 }
 
 .forecast-day:hover {
@@ -90,7 +97,12 @@
     }
     
     .forecast-day {
-        min-width: 80px;
+        width: 70px;
+        height: 90px;
+        min-width: 70px;
+        min-height: 90px;
+        max-width: 70px;
+        max-height: 90px;
     }
 }
 
@@ -105,7 +117,12 @@
     }
     
     .forecast-day {
+        width: 60px;
+        height: 80px;
         min-width: 60px;
+        min-height: 80px;
+        max-width: 60px;
+        max-height: 80px;
         padding: 5px;
     }
 }
