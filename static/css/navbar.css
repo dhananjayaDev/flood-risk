@@ -173,10 +173,10 @@
     position: absolute;
     top: 100%;
     right: 0;
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(0, 0, 0, 0.9);
     backdrop-filter: blur(20px);
     border-radius: 4px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     padding: 8px 0;
     min-width: 140px;
     opacity: 0;
@@ -184,7 +184,7 @@
     transform: translateY(-10px);
     transition: all 0.3s ease;
     z-index: 999;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     margin-top: 4px;
 }
 
@@ -198,7 +198,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 12px 16px;
+    padding: 8px 12px;
     color: white;
     text-decoration: none;
     font-size: 14px;
@@ -209,7 +209,7 @@
 }
 
 .dropdown-item:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.15);
     color: white;
     transform: none;
 }
