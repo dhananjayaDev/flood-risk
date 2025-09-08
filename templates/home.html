@@ -65,9 +65,9 @@
                         </a>
                 </div>
             </div>
+                    </div>
+                    </div>
                 </div>
-            </div>
-        </div>
 
     <!-- Main Weather Display -->
     <div class="main-weather-section">
@@ -78,13 +78,13 @@
                 <p class="condition-description">
                     Heavy rain, strong winds, and occasional lightning expected. Sudden downpours may lead to localized flooding in some areas.
                 </p>
-                    </div>
+            </div>
             <div class="temperature-display">
                 <span class="temperature">22°</span>
                 <span class="temp-variation">+/-</span>
                     </div>
             <div class="location-info">
-                <i class="fas fa-map-marker-alt"></i>
+                        <i class="fas fa-map-marker-alt"></i>
                 <span>New York</span>
                 <div class="uv-index">UV Ind.: 2</div>
                 </div>
@@ -101,7 +101,7 @@
                     <span>Wind status</span>
                     </div>
                 <div class="wind-value">7.90 km/h</div>
-                </div>
+                    </div>
             <div class="wind-charts">
                 <div class="wind-line-chart">
                     <canvas id="windLineChart"></canvas>
@@ -109,8 +109,8 @@
                 <div class="wind-bar-chart">
                     <canvas id="windBarChart"></canvas>
             </div>
-                </div>
             </div>
+        </div>
 
         <!-- Sunrise/Sunset Panel -->
         <div class="glass-panel sunrise-panel">
@@ -118,15 +118,15 @@
                 <div class="sunrise-info">
                     <i class="fas fa-sun"></i>
                     <span>Sunrise</span>
-                </div>
+                    </div>
                 <div class="sunset-info">
                     <i class="fas fa-sun"></i>
                     <span>✓ Sunset</span>
-                            </div>
-                                </div>
+                </div>
+                </div>
             <div class="sun-arc-chart">
                 <canvas id="sunArcChart"></canvas>
-                    </div>
+            </div>
                 </div>
             </div>
 
@@ -152,30 +152,31 @@
                 <div class="day-name">Thursday</div>
                 <div class="day-temp">26°</div>
                 <div class="day-icon"><i class="fas fa-cloud"></i></div>
-                            </div>
+                                </div>
             <div class="forecast-day">
                 <div class="day-name">Friday</div>
                 <div class="day-temp">23°</div>
                 <div class="day-icon"><i class="fas fa-cloud-rain"></i></div>
-                        </div>
+                            </div>
             <div class="forecast-day">
                 <div class="day-name">Saturday</div>
                 <div class="day-temp">26°</div>
                 <div class="day-icon"><i class="fas fa-cloud"></i></div>
-                    </div>
+                        </div>
             <div class="forecast-day">
                 <div class="day-name">Sunday</div>
                 <div class="day-temp">27°</div>
                 <div class="day-icon"><i class="fas fa-cloud-sun"></i></div>
+                    </div>
                 </div>
-            </div>
         <div class="forecast-trend-line">
-            <svg id="trendLine" viewBox="0 0 400 50">
-                <path d="M0,40 Q50,20 100,30 T200,25 T300,35 T400,30" stroke="white" stroke-width="2" fill="none"/>
-            </svg>
+            <canvas id="riverHeightChart" width="400" height="80"></canvas>
         </div>
     </div>
 </div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
@@ -309,11 +310,173 @@ function initDropdown() {
     }
 }
 
+function initRiverHeightChart() {
+    const ctx = document.getElementById('riverHeightChart').getContext('2d');
+    
+    const riverHeightChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            datasets: [{
+                label: 'River Height (m)',
+                data: [1.2, 2.1, 3.5, 2.8, 1.9, 2.3, 1.7],
+                borderColor: 'rgba(255, 255, 255, 0.7)',
+                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                borderWidth: 2,
+                pointBackgroundColor: 'rgba(255, 255, 255, 0.9)',
+                pointBorderColor: 'rgba(255, 255, 255, 0.5)',
+                pointBorderWidth: 1,
+                pointRadius: 3,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: 'rgba(255, 255, 255, 1)',
+                pointHoverBorderColor: 'rgba(255, 255, 255, 0.7)',
+                pointHoverBorderWidth: 2,
+                tension: 0.4,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            layout: {
+                padding: {
+                    top: 20,
+                    bottom: 5,
+                    left: 15,
+                    right: 15
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    enabled: true,
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleColor: 'white',
+                    bodyColor: 'white',
+                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                    borderWidth: 1,
+                    borderRadius: 6,
+                    padding: 8,
+                    titleFont: {
+                        family: 'Segoe UI, -apple-system, BlinkMacSystemFont, Inter, Roboto, sans-serif',
+                        size: 10,
+                        weight: 500
+                    },
+                    bodyFont: {
+                        family: 'Segoe UI, -apple-system, BlinkMacSystemFont, Inter, Roboto, sans-serif',
+                        size: 9,
+                        weight: 400
+                    },
+                    displayColors: false,
+                    position: 'nearest',
+                    xAlign: 'center',
+                    yAlign: 'bottom',
+                    caretSize: 4,
+                    callbacks: {
+                        title: function(context) {
+                            const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+                            return days[context[0].dataIndex];
+                        },
+                        label: function(context) {
+                            return context.parsed.y + 'm';
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    display: false
+                },
+                y: {
+                    display: false
+                }
+            },
+            elements: {
+                point: {
+                    hoverBackgroundColor: 'rgba(255, 255, 255, 1)'
+                }
+            },
+            interaction: {
+                intersect: false,
+                mode: 'index'
+            },
+            animation: {
+                duration: 2000,
+                easing: 'easeInOutQuart',
+                onComplete: function() {
+                    // Add custom labels after chart is drawn
+                    addCustomLabels(riverHeightChart);
+                }
+            },
+            transitions: {
+                show: {
+                    animations: {
+                        x: {
+                            from: 0
+                        },
+                        y: {
+                            from: 0
+                        }
+                    }
+                },
+                hide: {
+                    animations: {
+                        x: {
+                            to: 0
+                        },
+                        y: {
+                            to: 0
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+function addCustomLabels(chart) {
+    const ctx = chart.ctx;
+    const data = chart.data.datasets[0].data;
+    const meta = chart.getDatasetMeta(0);
+    const chartArea = chart.chartArea;
+    
+    ctx.save();
+    ctx.font = '10px Segoe UI, -apple-system, BlinkMacSystemFont, Inter, Roboto, sans-serif';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+    ctx.textBaseline = 'bottom';
+    
+    meta.data.forEach((point, index) => {
+        const x = point.x;
+        let y = point.y - 12; // Position above the point (above the line)
+        
+        // Ensure labels don't go above the chart area
+        if (y < chartArea.top + 12) {
+            y = chartArea.top + 12;
+        }
+        
+        // Adjust text alignment for edge points
+        if (index === 0) {
+            ctx.textAlign = 'left';
+        } else if (index === data.length - 1) {
+            ctx.textAlign = 'right';
+        } else {
+            ctx.textAlign = 'center';
+        }
+        
+        ctx.fillText(data[index] + 'm', x, y);
+    });
+    
+    ctx.restore();
+}
+
 // Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     initWeatherCharts();
     updateDateTime();
     initDropdown();
+    initRiverHeightChart();
     
     // Fix layout for high-resolution laptops
     function fixHighResLayout() {
@@ -935,8 +1098,18 @@ body {
 }
 
 .forecast-trend-line {
-    height: 40px;
-    width: 100%;
+    height: 70px;
+    position: relative;
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0;
+}
+
+#riverHeightChart {
+    width: 100% !important;
+    height: 70px !important;
 }
 
 #trendLine {
