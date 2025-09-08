@@ -341,12 +341,132 @@ function initNotificationsPanel() {
 }
 
 // Initialize all UI components
+function initSettingsPanel() {
+    const settingsDropdownItem = document.getElementById('settings-dropdown-item');
+    const settingsPanel = document.getElementById('settings-panel');
+    const settingsClose = document.getElementById('settings-close');
+    const backgroundOverlay = document.getElementById('background-overlay');
+    
+    console.log('Initializing settings panel...');
+    console.log('Settings dropdown item found:', !!settingsDropdownItem);
+    console.log('Settings panel found:', !!settingsPanel);
+    console.log('Settings close found:', !!settingsClose);
+    console.log('Background overlay found:', !!backgroundOverlay);
+    
+    if (!settingsDropdownItem || !settingsPanel || !settingsClose || !backgroundOverlay) {
+        console.log('Settings elements not found');
+        return;
+    }
+    
+    let isSettingsOpen = false;
+    
+    // Open settings panel
+    settingsDropdownItem.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Settings dropdown item clicked');
+        
+        if (!isSettingsOpen) {
+            settingsPanel.classList.add('show');
+            backgroundOverlay.classList.add('show');
+            isSettingsOpen = true;
+            
+            // Prevent body scroll when settings are open
+            document.body.style.overflow = 'hidden';
+            
+            // Close the dropdown menu
+            const dropdownMenu = document.querySelector('.dropdown-menu');
+            if (dropdownMenu) {
+                dropdownMenu.classList.remove('show');
+            }
+        }
+    });
+    
+    // Close settings panel
+    function closeSettings() {
+        if (isSettingsOpen) {
+            settingsPanel.classList.remove('show');
+            backgroundOverlay.classList.remove('show');
+            isSettingsOpen = false;
+            
+            // Restore body scroll
+            document.body.style.overflow = '';
+        }
+    }
+    
+    settingsClose.addEventListener('click', closeSettings);
+    
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && isSettingsOpen) {
+            closeSettings();
+        }
+    });
+    
+    // Close when clicking on background overlay
+    backgroundOverlay.addEventListener('click', closeSettings);
+    
+    // Close when clicking outside settings panel
+    document.addEventListener('click', function(e) {
+        if (isSettingsOpen && !settingsPanel.contains(e.target) && !settingsDropdownItem.contains(e.target)) {
+            closeSettings();
+        }
+    });
+    
+    // Handle settings form interactions
+    const saveBtn = document.querySelector('.settings-btn-primary');
+    const logoutBtn = document.querySelector('.settings-btn-danger');
+    const changePasswordBtn = document.querySelector('.settings-btn-secondary');
+    
+    if (saveBtn) {
+        saveBtn.addEventListener('click', function() {
+            console.log('Save settings clicked');
+            // Here you can add actual save functionality
+            closeSettings();
+        });
+    }
+    
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function() {
+            console.log('Logout clicked');
+            // Redirect to logout
+            window.location.href = '/auth/logout';
+        });
+    }
+    
+    if (changePasswordBtn) {
+        changePasswordBtn.addEventListener('click', function() {
+            console.log('Change password clicked');
+            // Here you can add change password functionality
+        });
+    }
+    
+    // Handle toggle switches
+    const toggles = document.querySelectorAll('.settings-toggle input[type="checkbox"]');
+    toggles.forEach(toggle => {
+        toggle.addEventListener('change', function() {
+            console.log('Toggle changed:', this.id, this.checked);
+            // Here you can add toggle functionality
+        });
+    });
+    
+    // Handle select changes
+    const selects = document.querySelectorAll('.settings-select');
+    selects.forEach(select => {
+        select.addEventListener('change', function() {
+            console.log('Select changed:', this.name || this.id, this.value);
+            // Here you can add select functionality
+        });
+    });
+}
+
 function initUI() {
     updateDateTime();
     initDropdown();
     initSearchBar();
     initMapPanel();
     initNotificationsPanel();
+    initSettingsPanel();
     fixHighResLayout();
     
     // Run on window resize
