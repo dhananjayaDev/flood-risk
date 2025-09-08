@@ -1,0 +1,111 @@
+/* Weather Forecast Component Styles */
+
+.forecast-section {
+    position: fixed;
+    bottom: 30px;
+    left: 0;
+    right: 0;
+    background: transparent;
+    border-radius: 15px;
+    padding: 15px;
+    z-index: 100;
+    margin: 0 30px;
+}
+
+.forecast-days {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.forecast-day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 10px;
+    border-radius: 15px;
+    transition: background 0.3s ease;
+    cursor: pointer;
+}
+
+.forecast-day:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.forecast-day.active {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.day-name {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 400;
+}
+
+.day-temp {
+    font-size: 18px;
+    font-weight: 400;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Inter', Roboto, sans-serif;
+}
+
+.day-icon {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.forecast-trend-line {
+    height: 70px;
+    position: relative;
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0;
+}
+
+#riverHeightChart {
+    width: 100% !important;
+    height: 70px !important;
+}
+
+#trendLine {
+    width: 100%;
+    height: 100%;
+}
+
+/* Responsive Design for Weather Forecast */
+@media (max-width: 768px) {
+    .forecast-section {
+        position: relative;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: 15px;
+    }
+    
+    .forecast-days {
+        gap: 10px;
+    }
+    
+    .forecast-day {
+        min-width: 80px;
+    }
+}
+
+@media (max-width: 480px) {
+    .forecast-section {
+        margin: 10px;
+    }
+    
+    .forecast-days {
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+    
+    .forecast-day {
+        min-width: 60px;
+        padding: 5px;
+    }
+}

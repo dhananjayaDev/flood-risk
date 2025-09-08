@@ -1,0 +1,217 @@
+<!-- Top Bar Component -->
+<div class="top-bar">
+    <div class="top-left">
+        <div class="app-logo">
+            <img src="{{ url_for('static', filename='images/flood.png') }}" alt="Flood Risk Logo" class="navbar-logo">
+            <div class="logo-text">
+                <div class="brand-name">FloodRisk</div>
+                <div class="brand-subtitle">Flood Risk Management System</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="top-center">
+        <div class="nav-icons">
+            <!-- Home Icon -->
+            <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9,22 9,12 15,12 15,22"></polyline>
+            </svg>
+            <!-- Search Icon -->
+            <svg class="nav-icon search-icon" id="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <!-- Map Icon -->
+            <svg class="nav-icon map-icon" id="map-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                <line x1="8" y1="2" x2="8" y2="18"></line>
+                <line x1="16" y1="6" x2="16" y2="22"></line>
+            </svg>
+            <!-- Bell Icon -->
+            <div class="notification-wrapper">
+                <svg class="nav-icon nav-notification-icon" id="notification-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+                <span class="notification-badge" id="notification-badge">3</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="top-right">
+        <div class="datetime" id="current-datetime">28 Aug | 11:52</div>
+        <div class="user-profile">
+            <img src="{{ url_for('static', filename='images/dp.jpg') }}" alt="Profile" class="profile-img">
+            <div class="user-info">
+                <div class="username">{{ current_user.username if current_user.is_authenticated else 'Guest' }}</div>
+                <div class="user-role">Admin</div>
+            </div>
+            <div class="user-dropdown">
+                <i class="fas fa-chevron-down"></i>
+                <div class="dropdown-menu">
+                    <a href="{{ url_for('main.settings') }}" class="dropdown-item">
+                        <i class="fas fa-cog"></i>
+                        Settings
+                    </a>
+                    <a href="{{ url_for('auth.logout') }}" class="dropdown-item">
+                        <i class="fas fa-power-off"></i>
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Floating Search Bar -->
+<div class="floating-search-bar" id="floating-search-bar">
+    <div class="search-container">
+        <div class="search-input-wrapper">
+            <svg class="search-input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <input type="text" class="search-input" placeholder="Search..." id="search-input">
+        </div>
+    </div>
+</div>
+
+<!-- Map Panel -->
+<div class="map-panel" id="map-panel">
+    <div class="map-container">
+        <div class="map-header">
+            <div class="map-title">
+                <svg class="map-title-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                    <line x1="8" y1="2" x2="8" y2="18"></line>
+                    <line x1="16" y1="6" x2="16" y2="22"></line>
+                </svg>
+                <span>Flood Risk Map</span>
+            </div>
+            <button class="map-close" id="map-close">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="map-content">
+            <div class="map-container-inner">
+                <!-- Actual Map -->
+                <iframe 
+                    class="map-iframe" 
+                    src="https://www.openstreetmap.org/export/embed.html?bbox=-74.1,40.6,-73.9,40.8&layer=mapnik&marker=40.7,-74.0"
+                    id="map-iframe">
+                </iframe>
+                
+                <!-- Map Controls Overlay -->
+                <div class="map-controls-overlay">
+                    <div class="map-controls">
+                        <button class="map-control-btn" id="current-location-btn">
+                            <i class="fas fa-location-arrow"></i>
+                            Current Location
+                        </button>
+                        <button class="map-control-btn" id="risk-layers-btn">
+                            <i class="fas fa-layer-group"></i>
+                            Risk Layers
+                        </button>
+                        <button class="map-control-btn" id="zoom-in-btn">
+                            <i class="fas fa-search-plus"></i>
+                            Zoom In
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Notifications Panel -->
+<div class="notifications-panel" id="notifications-panel">
+    <div class="notifications-container">
+        <div class="notifications-header">
+            <div class="notifications-title">
+                <svg class="notifications-title-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+                <span>Weather Alerts</span>
+            </div>
+            <button class="notifications-close" id="notifications-close">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="notifications-content">
+            <div class="notification-item active">
+                <div class="notification-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">Thunderstorms</div>
+                    <div class="notification-description">
+                        Intense weather conditions, Heavy rain, strong winds, and occasional lightning expected. Sudden downpours may lead to localized flooding in some areas.
+                    </div>
+                    <div class="notification-time">2 minutes ago</div>
+                </div>
+                <div class="notification-status">
+                    <span class="status-badge critical">Critical</span>
+                </div>
+            </div>
+            
+            <div class="notification-item">
+                <div class="notification-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">Flood Warning</div>
+                    <div class="notification-description">
+                        River levels are rising rapidly. Evacuation may be necessary for low-lying areas near the riverbank.
+                    </div>
+                    <div class="notification-time">15 minutes ago</div>
+                </div>
+                <div class="notification-status">
+                    <span class="status-badge warning">Warning</span>
+                </div>
+            </div>
+            
+            <div class="notification-item">
+                <div class="notification-icon">
+                    <i class="fas fa-cloud-rain"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">Heavy Rain Alert</div>
+                    <div class="notification-description">
+                        Expect heavy rainfall for the next 3 hours. Avoid unnecessary travel and stay indoors if possible.
+                    </div>
+                    <div class="notification-time">1 hour ago</div>
+                </div>
+                <div class="notification-status">
+                    <span class="status-badge info">Info</span>
+                </div>
+            </div>
+            
+            <div class="notification-item">
+                <div class="notification-icon">
+                    <i class="fas fa-wind"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">High Wind Warning</div>
+                    <div class="notification-description">
+                        Wind speeds reaching 40-50 mph expected. Secure outdoor objects and avoid high-rise areas.
+                    </div>
+                    <div class="notification-time">2 hours ago</div>
+                </div>
+                <div class="notification-status">
+                    <span class="status-badge warning">Warning</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Background Overlay -->
+<div class="background-overlay" id="background-overlay"></div>
