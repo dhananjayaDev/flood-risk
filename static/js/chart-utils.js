@@ -163,22 +163,65 @@ function initWeatherCharts() {
         }
     });
 
-    // Sun Arc Chart
+    // Sun Line Chart (Sunrise/Sunset)
     const sunArcCtx = document.getElementById('sunArcChart').getContext('2d');
     new Chart(sunArcCtx, {
-        type: 'doughnut',
+        type: 'line',
         data: {
+            labels: ['06:00 AM', '06:00 PM'],
             datasets: [{
-                data: [75, 25],
-                backgroundColor: ['rgba(255,255,255,0.1)', 'transparent'],
-                borderWidth: 0
+                data: [0, 0], // Same y-value to create a straight horizontal line
+                borderColor: 'rgba(255,255,255,0.8)',
+                backgroundColor: 'transparent',
+                borderWidth: 2,
+                pointRadius: 4,
+                pointBackgroundColor: 'rgba(255,255,255,0.9)',
+                pointBorderColor: 'rgba(255,255,255,0.5)',
+                pointBorderWidth: 1,
+                tension: 0, // No curve, straight line
+                fill: false
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            cutout: '80%',
-            plugins: { legend: { display: false } }
+            plugins: { 
+                legend: { display: false },
+                tooltip: {
+                    enabled: true,
+                    callbacks: {
+                        title: function(context) {
+                            return context[0].label;
+                        },
+                        label: function(context) {
+                            return context.label === '06:00 AM' ? '06:00 AM' : '06:00 PM';
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    display: true,
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        color: 'rgba(255,255,255,0.8)',
+                        font: {
+                            size: 10,
+                            family: 'Segoe UI, -apple-system, BlinkMacSystemFont, Inter, Roboto, sans-serif'
+                        }
+                    }
+                },
+                y: {
+                    display: false
+                }
+            },
+            elements: {
+                point: {
+                    hoverRadius: 6
+                }
+            }
         }
     });
 }
