@@ -11,7 +11,7 @@
     {% block head %}{% endblock %}
 </head>
 <body>
-    {% if not request.endpoint or request.endpoint != 'main.home' %}
+    {% if not request.endpoint or (request.endpoint != 'main.home' and request.endpoint != 'main.public_dashboard') %}
     <nav class="navbar navbar-expand-lg navbar-light bg-white">
         <div class="container-fluid px-4">
             <a class="navbar-brand d-flex align-items-center" href="{{ url_for('main.index') }}">
@@ -68,7 +68,7 @@
 
     {% block content %}{% endblock %}
 
-    {% if not request.endpoint or request.endpoint != 'main.home' %}
+    {% if not request.endpoint or (request.endpoint != 'main.home' and request.endpoint != 'main.public_dashboard') %}
     <footer class="bg-white text-center text-muted py-3 mt-5 border-top">
         <div class="container">
             <p>&copy; 2025 FloodRisk. All rights reserved.</p>

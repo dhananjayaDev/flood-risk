@@ -20,6 +20,11 @@ def landing():
     """Public landing page for marketing/information purposes"""
     return render_template('index.html', title='Home')
 
+@bp.route('/public')
+def public_dashboard():
+    """Public dashboard accessible without authentication"""
+    return render_template('public.html', title='Public Dashboard')
+
 @bp.route('/home')
 @login_required
 def home():
