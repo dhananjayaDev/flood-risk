@@ -10,6 +10,13 @@
         </div>
     </div>
     
+    <!-- Mobile Menu Toggle Button -->
+    <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+        <span class="burger-line"></span>
+        <span class="burger-line"></span>
+        <span class="burger-line"></span>
+    </button>
+    
     <div class="top-center">
         <div class="nav-icons">
             <!-- Home Icon -->
@@ -425,5 +432,136 @@
     </div>
 </div>
 
+<!-- Mobile Menu Overlay -->
+<div class="mobile-menu-overlay" id="mobile-menu-overlay"></div>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobile-menu">
+    <!-- Mobile Menu Header -->
+    <div class="mobile-menu-header">
+        <h3 class="mobile-menu-title">Menu</h3>
+    </div>
+    
+    <!-- Profile Section -->
+    <div class="mobile-profile-section">
+        <div class="mobile-profile-info">
+            <img src="{{ url_for('static', filename='images/dp.jpg') }}" alt="Profile" class="mobile-profile-img">
+            <div class="mobile-profile-details">
+                <div class="mobile-profile-name">{{ current_user.username if current_user.is_authenticated else 'Bluechip' }}</div>
+                <div class="mobile-profile-role">{{ 'Admin' if current_user.is_authenticated else 'Public' }}</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mobile Menu Items -->
+    <ul class="mobile-menu-items">
+        <li class="mobile-menu-item">
+            <button class="mobile-menu-link" data-submenu="profile">
+                Profile
+            </button>
+            <ul class="mobile-submenu" id="profile-submenu">
+                <li class="mobile-submenu-item">
+                    <button class="mobile-submenu-link" onclick="toggleSettings()">Settings</button>
+                </li>
+                <li class="mobile-submenu-item">
+                    <a href="{{ url_for('auth.logout') }}" class="mobile-submenu-link">Sign Out</a>
+                </li>
+            </ul>
+        </li>
+        <li class="mobile-menu-item">
+            <button class="mobile-menu-link" onclick="scrollToSection('home')">
+                Home
+            </button>
+        </li>
+        <li class="mobile-menu-item">
+            <button class="mobile-menu-link" onclick="toggleSearch()">
+                Search
+            </button>
+        </li>
+        <li class="mobile-menu-item">
+            <button class="mobile-menu-link" onclick="toggleMap()">
+                Map
+            </button>
+        </li>
+        <li class="mobile-menu-item">
+            <button class="mobile-menu-link" onclick="toggleNotifications()">
+                Notification
+            </button>
+        </li>
+    </ul>
+    
+    <!-- Mobile Menu Footer -->
+    <div class="mobile-menu-footer">
+        <p class="mobile-menu-version">FloodRisk v1.0</p>
+    </div>
+</div>
+
 <!-- Background Overlay -->
 <div class="background-overlay" id="background-overlay"></div>
+
+<script>
+// Mobile Menu Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+    const profileSubmenu = document.getElementById('profile-submenu');
+    const profileButton = document.querySelector('[data-submenu="profile"]');
+    
+    // Toggle mobile menu
+    if (mobileMenuToggle) {
+        mobileMenuToggle.addEventListener('click', function() {
+            mobileMenuToggle.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+            mobileMenuOverlay.classList.toggle('active');
+            document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+        });
+    }
+    
+    // Close mobile menu when clicking overlay
+    if (mobileMenuOverlay) {
+        mobileMenuOverlay.addEventListener('click', function() {
+            closeMobileMenu();
+        });
+    }
+    
+    // Toggle profile submenu
+    if (profileButton && profileSubmenu) {
+        profileButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            profileSubmenu.classList.toggle('active');
+        });
+    }
+    
+    // Close mobile menu function
+    function closeMobileMenu() {
+        mobileMenuToggle.classList.remove('active');
+        mobileMenu.classList.remove('active');
+        mobileMenuOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    
+    // Close mobile menu when clicking on menu links (except submenu toggles)
+    const mobileMenuLinks = document.querySelectorAll('.mobile-menu-link:not([data-submenu])');
+    mobileMenuLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            closeMobileMenu();
+        });
+    });
+    
+    // Close mobile menu when clicking on submenu links
+    const mobileSubmenuLinks = document.querySelectorAll('.mobile-submenu-link');
+    mobileSubmenuLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            closeMobileMenu();
+        });
+    });
+    
+    // Close mobile menu on escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && mobileMenu.classList.contains('active')) {
+            closeMobileMenu();
+        }
+    });
+});
+</script>
