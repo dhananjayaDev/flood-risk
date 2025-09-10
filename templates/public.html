@@ -8,6 +8,7 @@
 <link href="{{ url_for('static', filename='css/weather-panels.css') }}" rel="stylesheet">
 <link href="{{ url_for('static', filename='css/weather-forecast.css') }}" rel="stylesheet">
 <link href="{{ url_for('static', filename='css/home.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/modal-panels.css') }}" rel="stylesheet">
 <!-- Desktop Responsive CSS -->
 <link href="{{ url_for('static', filename='css/responsive/desktop/navbar-desktop.css') }}" rel="stylesheet">
 <!-- Mobile Responsive CSS -->
@@ -50,11 +51,17 @@ console.log('Home page CSS files should be loading...');
 
     <!-- 7-Day Forecast Component -->
     {% include 'components/weather-forecast.html' %}
+    
+    <!-- Panels -->
+    {% include 'components/search-panel.html' %}
+    {% include 'components/map-panel.html' %}
+    {% include 'components/notification-panel.html' %}
 </div>
 
 <!-- Component JavaScript Files -->
 <script src="{{ url_for('static', filename='js/chart-utils.js') }}"></script>
 <script src="{{ url_for('static', filename='js/ui-utils.js') }}"></script>
+<script src="{{ url_for('static', filename='js/panels.js') }}"></script>
 
 <script>
 // Initialize everything when DOM is loaded

@@ -564,4 +564,29 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+// Panel toggle functions
+function toggleSearch() {
+    if (typeof openSearchPanel === 'function') {
+        openSearchPanel();
+    } else {
+        console.log('Search panel functionality not loaded');
+    }
+}
+
+function toggleMap() {
+    if (typeof openMapPanel === 'function') {
+        openMapPanel();
+    } else {
+        console.log('Map panel functionality not loaded');
+    }
+}
+
+function toggleNotifications() {
+    if (typeof openNotificationPanel === 'function') {
+        openNotificationPanel();
+    } else {
+        console.log('Notification panel functionality not loaded');
+    }
+}
 </script>
