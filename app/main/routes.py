@@ -25,7 +25,31 @@ def landing():
 @bp.route('/public')
 def public_dashboard():
     """Public dashboard accessible without authentication"""
-    return render_template('public.html', title='Public Dashboard')
+    # Get current weather data for Ratnapura
+    weather_data = get_current_weather()
+    
+    # Get wind data for Ratnapura
+    wind_data = get_wind()
+    
+    # Get astronomy data for Ratnapura (sunrise/sunset)
+    astronomy_data = get_astronomy()
+    
+    # Get 7-day overview data (3 days history + current + 3 days forecast)
+    forecast_7day = get_7day_overview()
+    
+    # Get river height data for Kalu Ganga
+    river_current = get_current_river_height("Kalu Ganga")
+    river_7day = get_river_height_7day("Kalu Ganga")
+    
+    # Get appropriate background video based on weather condition
+    weather_condition = weather_data['condition'] if weather_data else None
+    background_video = get_weather_background_video(weather_condition)
+    
+    # Debug logging
+    print(f"DEBUG: Weather condition: {weather_condition}")
+    print(f"DEBUG: Background video: {background_video}")
+    
+    return render_template('public.html', title='Public Dashboard', weather_data=weather_data, wind_data=wind_data, astronomy_data=astronomy_data, forecast_7day=forecast_7day, river_current=river_current, river_7day=river_7day, background_video=background_video)
 
 @bp.route('/home')
 @login_required
