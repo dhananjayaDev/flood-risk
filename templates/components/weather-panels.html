@@ -7,7 +7,7 @@
                 <i class="fas fa-wind"></i>
                 <span>Wind status</span>
             </div>
-            <div class="wind-value">7.90 km/h</div>
+            <div class="wind-value">{{ wind_data.wind_kph if wind_data else '--' }} km/h</div>
         </div>
         <div class="wind-charts">
             <div class="wind-line-chart">

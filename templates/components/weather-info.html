@@ -1,19 +1,19 @@
 <!-- Weather Info Component -->
 <div class="weather-info">
     <div class="weather-condition">
-        <h1 class="condition-title">Thunderstorms</h1>
+        <h1 class="condition-title">{{ weather_data.condition if weather_data else 'Loading...' }}</h1>
         <p class="condition-subtitle">intense weather conditions</p>
         <p class="condition-description">
-            Heavy rain, strong winds, and occasional lightning expected. Sudden downpours may lead to localized flooding in some areas.
+            {{ weather_data.description if weather_data else 'Loading weather data...' }}
         </p>
     </div>
     <div class="temperature-display">
-        <span class="temperature">22°</span>
+        <span class="temperature">{{ weather_data.temperature_c if weather_data else '--' }}°</span>
         <span class="temp-variation">+/-</span>
     </div>
     <div class="location-info">
         <i class="fas fa-map-marker-alt"></i>
-        <span>New York</span>
-        <div class="uv-index">UV Ind.: 2</div>
+        <span>{{ weather_data.location if weather_data else 'Loading...' }}</span>
+        <div class="uv-index">UV Ind.: {{ weather_data.uv if weather_data else '--' }}</div>
     </div>
 </div>

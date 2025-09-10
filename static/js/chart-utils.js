@@ -112,7 +112,7 @@ window.changeTooltipStyle = changeTooltipStyle;
 window.TOOLTIP_STYLES = TOOLTIP_STYLES;
 
 // Initialize Weather Charts
-function initWeatherCharts() {
+function initWeatherCharts(astronomyData = null) {
     // Wind Line Chart
     const windLineCtx = document.getElementById('windLineChart').getContext('2d');
     new Chart(windLineCtx, {
@@ -165,10 +165,15 @@ function initWeatherCharts() {
 
     // Sun Line Chart (Sunrise/Sunset)
     const sunArcCtx = document.getElementById('sunArcChart').getContext('2d');
+    
+    // Get sunrise and sunset times from astronomy data or use defaults
+    const sunriseTime = astronomyData && astronomyData.sunrise ? astronomyData.sunrise : '06:00 AM';
+    const sunsetTime = astronomyData && astronomyData.sunset ? astronomyData.sunset : '06:00 PM';
+    
     new Chart(sunArcCtx, {
         type: 'line',
         data: {
-            labels: ['06:00 AM', '06:00 PM'],
+            labels: [sunriseTime, sunsetTime],
             datasets: [{
                 data: [0, 0], // Same y-value to create a straight horizontal line
                 borderColor: 'rgba(255,255,255,0.8)',
@@ -194,7 +199,7 @@ function initWeatherCharts() {
                             return context[0].label;
                         },
                         label: function(context) {
-                            return context.label === '06:00 AM' ? '06:00 AM' : '06:00 PM';
+                            return context.label === sunriseTime ? sunriseTime : sunsetTime;
                         }
                     }
                 }
@@ -227,16 +232,26 @@ function initWeatherCharts() {
 }
 
 // Initialize River Height Chart
-function initRiverHeightChart() {
+function initRiverHeightChart(riverData = null) {
     const ctx = document.getElementById('riverHeightChart').getContext('2d');
+    
+    // Use 7-day data if available, otherwise use fallback
+    let labels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']; // Fallback labels
+    let data = [0, 0, 0, 2.5, 0, 0, 0]; // Fallback: zeros with current day height
+    
+    if (riverData && Array.isArray(riverData)) {
+        // Use dynamic day names from the data
+        labels = riverData.map(day => day.day);
+        data = riverData.map(day => day.height);
+    }
     
     const riverHeightChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            labels: labels,
             datasets: [{
                 label: 'River Height (m)',
-                data: [1.2, 2.1, 3.5, 2.8, 1.9, 2.3, 1.7],
+                data: data,
                 borderColor: 'rgba(255, 255, 255, 0.7)',
                 backgroundColor: 'rgba(255, 255, 255, 0.05)',
                 borderWidth: 2,
