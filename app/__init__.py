@@ -33,5 +33,23 @@ def create_app():
     # Create database tables
     with app.app_context():
         db.create_all()
+        # Create tables for kalugangadb
+        try:
+            # Import the RiverHeight model to ensure it's registered
+            from app.models import RiverHeight
+            # Create the table for the kalugangadb bind
+            RiverHeight.__table__.create(db.engines['kalugangadb'], checkfirst=True)
+        except Exception as e:
+            print(f"Note: Could not create kalugangadb tables: {e}")
+    
+    # Start automatic river data collection scheduler
+    try:
+        from app.scheduler import start_automatic_collection
+        if start_automatic_collection():
+            print("✅ Automatic river data collection started")
+        else:
+            print("⚠️ Failed to start automatic data collection")
+    except Exception as e:
+        print(f"⚠️ Scheduler not available: {e}")
     
     return app

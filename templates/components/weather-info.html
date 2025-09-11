@@ -2,7 +2,7 @@
 <div class="weather-info">
     <div class="weather-condition">
         <h1 class="condition-title">{{ weather_data.condition if weather_data else 'Loading...' }}</h1>
-        <p class="condition-subtitle">intense weather conditions</p>
+        <p class="condition-subtitle">{{ weather_data.river_name if weather_data else 'Loading...' }}</p>
         <p class="condition-description">
             {{ weather_data.description if weather_data else 'Loading weather data...' }}
         </p>

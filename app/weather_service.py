@@ -61,17 +61,26 @@ def fetch_api(endpoint, params):
 
 def get_current_weather():
     """
-    Function to fetch and return current weather data for Ratnapura.
-    Returns a dictionary with temperature, condition, UV index, and location.
+    Function to fetch and return current weather data for current location.
+    Returns a dictionary with temperature, condition, UV index, location, and river name.
     """
     try:
         data = fetch_api('current', {})
         current = data['current']
         location = data['location']
+        
+        # Get current river name based on location
+        try:
+            from .river import get_current_river
+            current_river = get_current_river()
+        except:
+            current_river = "Kalu Ganga (Ratnapura)"
+        
         result = {
             'temperature_c': current['temp_c'],
             'condition': current['condition']['text'],
             'description': 'Heavy rain, strong winds, and occasional lightning expected. Sudden downpours may lead to localized flooding in some areas.',
+            'river_name': current_river,
             'uv': current['uv'],
             'location': location['name']
         }
