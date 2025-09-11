@@ -69,7 +69,7 @@
     }
     
     .nav-icon:hover {
-        color: #4CAF50 !important;
+        color: rgba(255, 255, 255, 0.8) !important;
         transform: scale(1.1) !important;
     }
     
@@ -105,7 +105,7 @@
     }
     
     .profile-img:hover {
-        border-color: #4CAF50 !important;
+        border-color: rgba(255, 255, 255, 0.6) !important;
         transform: scale(1.05) !important;
     }
     
