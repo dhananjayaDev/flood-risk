@@ -121,120 +121,129 @@ def get_timestamp():
             print(f"Error fetching timestamp: {str(e)}")
         return None
 
+# def get_weather_background_video(weather_condition):
+#     """
+#     Function to determine the appropriate background video based on weather condition.
+#     Returns the video filename for the current weather condition.
+#     Uses available videos from the weather folder.
+#     """
+#     if not weather_condition:
+#         if FLASK_AVAILABLE:
+#             current_app.logger.info("No weather condition provided, using default video: videos/bg_vdo02.mp4")
+#         else:
+#             print("No weather condition provided, using default video: videos/bg_vdo02.mp4")
+#         return 'videos/bg_vdo02.mp4'  # Default video
+    
+#     condition = weather_condition.lower()
+#     if FLASK_AVAILABLE:
+#         current_app.logger.info(f"Weather condition: '{condition}'")
+#     else:
+#         print(f"Weather condition: '{condition}'")
+    
+#     # Clear conditions - use sunny video
+#     if condition in ['clear']:
+#         return 'videos/weather/sunny.mp4'
+    
+#     # Partly Cloudy conditions - use partly_cloudy video
+#     elif condition in ['partly cloudy']:
+#         return 'videos/weather/partly_cloudy.mp4'
+    
+#     # Cloudy conditions - use cloudy video
+#     elif condition in ['cloudy']:
+#         return 'videos/weather/cloudy.mp4'
+    
+#     # Overcast conditions - use overcast video
+#     elif condition in ['overcast']:
+#         return 'videos/weather/overcast.mp4'
+    
+#     # Mist conditions - use mist video
+#     elif condition in ['mist']:
+#         return 'videos/weather/mist.mp4'
+    
+#     # Patchy Rain Possible - use patchy_rain video
+#     elif condition in ['patchy rain possible']:
+#         return 'videos/weather/patchy_rain.mp4'
+    
+#     # Patchy Light Drizzle - use patchy_llight_drizzle video (note the typo in filename)
+#     elif condition in ['patchy light drizzle']:
+#         return 'videos/weather/patchy_llight_drizzle.mp4'
+    
+#     # Light Drizzle - use light_rain video as closest match
+#     elif condition in ['light drizzle']:
+#         return 'videos/weather/light_rain.mp4'
+    
+#     # Patchy Light Rain - use light_rain video
+#     elif condition in ['patchy light rain']:
+#         return 'videos/weather/light_rain.mp4'
+    
+#     # Light Rain - use light_rain video
+#     elif condition in ['light rain']:
+#         return 'videos/weather/light_rain.mp4'
+    
+#     # Moderate Rain at Times - use moderate_rain_shower video
+#     elif condition in ['moderate rain at times']:
+#         return 'videos/weather/moderate_rain_shower.mp4'
+    
+#     # Moderate Rain - use moderate_rain_shower video
+#     elif condition in ['moderate rain']:
+#         return 'videos/weather/moderate_rain_shower.mp4'
+    
+#     # Heavy Rain at Times - use moderate_rain_shower video
+#     elif condition in ['heavy rain at times']:
+#         return 'videos/weather/moderate_rain_shower.mp4'
+    
+#     # Heavy Rain - use moderate_rain_shower video
+#     elif condition in ['heavy rain']:
+#         return 'videos/weather/moderate_rain_shower.mp4'
+    
+#     # Light Rain Shower - use light_rain video
+#     elif condition in ['light rain shower']:
+#         return 'videos/weather/light_rain.mp4'
+    
+#     # Moderate or Heavy Rain Shower - use moderate_rain_shower video
+#     elif condition in ['moderate or heavy rain shower']:
+#         return 'videos/weather/moderate_rain_shower.mp4'
+    
+#     # Torrential Rain Shower - use moderate_rain_shower video
+#     elif condition in ['torrential rain shower']:
+#         return 'videos/weather/moderate_rain_shower.mp4'
+    
+#     # Patchy Light Rain with Thunder - use thunderstorm video
+#     elif condition in ['patchy light rain with thunder']:
+#         return 'videos/weather/thunderstorm.mp4'
+    
+#     # Moderate or Heavy Rain with Thunder - use thunderstorm video
+#     elif condition in ['moderate or heavy rain with thunder']:
+#         return 'videos/weather/thunderstorm.mp4'
+    
+#     # Fallback patterns for similar conditions
+#     elif any(word in condition for word in ['thunder', 'thunderstorm']):
+#         return 'videos/weather/thunderstorm.mp4'
+    
+#     elif any(word in condition for word in ['rain', 'drizzle', 'shower']):
+#         return 'videos/weather/patchy_rain.mp4'
+    
+#     elif any(word in condition for word in ['cloudy', 'overcast']):
+#         return 'videos/weather/cloudy.mp4'
+    
+#     elif any(word in condition for word in ['mist', 'fog']):
+#         return 'videos/weather/mist.mp4'
+    
+#     # Default fallback
+#     else:
+#         return 'videos/bg_vdo02.mp4'
+
 def get_weather_background_video(weather_condition):
     """
-    Function to determine the appropriate background video based on weather condition.
-    Returns the video filename for the current weather condition.
+    Simplified function to return bg_vdo01.mp4 as background video.
+    This is a temporary solution until weather-specific videos are optimized.
     """
-    if not weather_condition:
-        if FLASK_AVAILABLE:
-            current_app.logger.info("No weather condition provided, using default video: videos/bg_vdo02.mp4")
-        else:
-            print("No weather condition provided, using default video: videos/bg_vdo02.mp4")
-        return 'videos/bg_vdo02.mp4'  # Default video
-    
-    condition = weather_condition.lower()
     if FLASK_AVAILABLE:
-        current_app.logger.info(f"Weather condition: '{condition}'")
+        current_app.logger.info("Using simplified background video: videos/bg_vdo01.mp4")
     else:
-        print(f"Weather condition: '{condition}'")
+        print("Using simplified background video: videos/bg_vdo01.mp4")
     
-    # Clear conditions
-    if condition in ['clear']:
-        return 'videos/weather/sunny.mp4'
-    
-    # Partly Cloudy conditions
-    elif condition in ['partly cloudy']:
-        if FLASK_AVAILABLE:
-            current_app.logger.info("Partly cloudy condition detected, using videos/bg_vdo02.mp4")
-        else:
-            print("Partly cloudy condition detected, using videos/bg_vdo02.mp4")
-        return 'videos/bg_vdo02.mp4'  # Fallback until partly_cloudy.mp4 is added
-    
-    # Cloudy conditions
-    elif condition in ['cloudy']:
-        return 'videos/bg_vdo02.mp4'  # Fallback until cloudy.mp4 is added
-    
-    # Overcast conditions
-    elif condition in ['overcast']:
-        return 'videos/bg_vdo02.mp4'  # Fallback until overcast.mp4 is added
-    
-    # Mist conditions
-    elif condition in ['mist']:
-        return 'videos/bg_vdo02.mp4'  # Fallback until mist.mp4 is added
-    
-    # Patchy Rain Possible
-    elif condition in ['patchy rain possible']:
-        return 'videos/weather/patchy_rain.mp4'  # This video exists
-    
-    # Patchy Light Drizzle
-    elif condition in ['patchy light drizzle']:
-        return 'videos/bg_vdo03.mp4'  # Fallback until patchy_light_drizzle.mp4 is added
-    
-    # Light Drizzle
-    elif condition in ['light drizzle']:
-        return 'videos/bg_vdo03.mp4'  # Fallback until light_drizzle.mp4 is added
-    
-    # Patchy Light Rain
-    elif condition in ['patchy light rain']:
-        return 'videos/bg_vdo03.mp4'  # Fallback until patchy_light_rain.mp4 is added
-    
-    # Light Rain
-    elif condition in ['light rain']:
-        return 'videos/bg_vdo03.mp4'  # Fallback until light_rain.mp4 is added
-    
-    # Moderate Rain at Times
-    elif condition in ['moderate rain at times']:
-        return 'videos/bg_vdo03.mp4'  # Fallback until moderate_rain_at_times.mp4 is added
-    
-    # Moderate Rain
-    elif condition in ['moderate rain']:
-        return 'videos/bg_vdo03.mp4'  # Fallback until moderate_rain.mp4 is added
-    
-    # Heavy Rain at Times
-    elif condition in ['heavy rain at times']:
-        return 'videos/bg_vdo03.mp4'  # Fallback until heavy_rain_at_times.mp4 is added
-    
-    # Heavy Rain
-    elif condition in ['heavy rain']:
-        return 'videos/bg_vdo03.mp4'  # Fallback until heavy_rain.mp4 is added
-    
-    # Light Rain Shower
-    elif condition in ['light rain shower']:
-        return 'videos/bg_vdo03.mp4'  # Fallback until light_rain_shower.mp4 is added
-    
-    # Moderate or Heavy Rain Shower
-    elif condition in ['moderate or heavy rain shower']:
-        return 'videos/bg_vdo03.mp4'  # Fallback until moderate_heavy_rain_shower.mp4 is added
-    
-    # Torrential Rain Shower
-    elif condition in ['torrential rain shower']:
-        return 'videos/bg_vdo03.mp4'  # Fallback until torrential_rain_shower.mp4 is added
-    
-    # Patchy Light Rain with Thunder
-    elif condition in ['patchy light rain with thunder']:
-        return 'videos/weather/thunderstorm.mp4'  # This video exists
-    
-    # Moderate or Heavy Rain with Thunder
-    elif condition in ['moderate or heavy rain with thunder']:
-        return 'videos/weather/thunderstorm.mp4'  # This video exists
-    
-    # Fallback patterns for similar conditions
-    elif any(word in condition for word in ['thunder', 'thunderstorm']):
-        return 'videos/weather/thunderstorm.mp4'
-    
-    elif any(word in condition for word in ['rain', 'drizzle', 'shower']):
-        return 'videos/weather/patchy_rain.mp4'
-    
-    elif any(word in condition for word in ['cloudy', 'overcast']):
-        return 'videos/bg_vdo02.mp4'
-    
-    elif any(word in condition for word in ['mist', 'fog']):
-        return 'videos/bg_vdo02.mp4'
-    
-    # Default fallback
-    else:
-        return 'videos/bg_vdo02.mp4'
+    return 'videos/bg_vdo02.mp4'
 
 def get_weather_icon(weather_condition):
     """
