@@ -37,9 +37,9 @@ def public_dashboard():
     # Get 7-day overview data (3 days history + current + 3 days forecast)
     forecast_7day = get_7day_overview()
     
-    # Get river height data for Kalu Ganga (Ratnapura)
-    river_current = get_current_river_height("Kalu Ganga (Ratnapura)")
-    river_7day = get_river_height_7day("Kalu Ganga (Ratnapura)")
+    # Get river height data for default river (Kalu Ganga (Ratnapura))
+    river_current = get_current_river_height()
+    river_7day = get_river_height_7day()
     
     # Get appropriate background video based on weather condition
     weather_condition = weather_data['condition'] if weather_data else None
@@ -66,9 +66,9 @@ def home():
     # Get 7-day overview data (3 days history + current + 3 days forecast)
     forecast_7day = get_7day_overview()
     
-    # Get river height data for Kalu Ganga (Ratnapura)
-    river_current = get_current_river_height("Kalu Ganga (Ratnapura)")
-    river_7day = get_river_height_7day("Kalu Ganga (Ratnapura)")
+    # Get river height data for default river (Kalu Ganga (Ratnapura))
+    river_current = get_current_river_height()
+    river_7day = get_river_height_7day()
     
     # Get appropriate background video based on weather condition
     weather_condition = weather_data['condition'] if weather_data else None
