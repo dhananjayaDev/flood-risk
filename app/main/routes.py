@@ -1,10 +1,11 @@
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, flash, redirect, url_for, request, jsonify
 from flask_login import login_required, current_user
 from flask_socketio import emit
 from app.main import bp
 from app import socketio
 from app.weather_service import get_current_weather, get_weather_background_video, get_wind, get_astronomy, get_7day_overview
 from app.river import get_current_river_height, get_river_height_7day
+from app.search import search_location_data, get_available_locations
 import random
 from datetime import datetime, timedelta
 
@@ -258,3 +259,58 @@ def handle_data_request():
     thread = threading.Thread(target=send_updates)
     thread.daemon = True
     thread.start()
+
+# Search routes
+@bp.route('/search')
+@login_required
+def search():
+    """Search page for authenticated users"""
+    return render_template('search.html', title='Search')
+
+@bp.route('/api/search', methods=['POST'])
+@login_required
+def api_search():
+    """API endpoint for search functionality (authenticated users)"""
+    try:
+        data = request.get_json()
+        search_term = data.get('search_term', '').strip()
+        
+        if not search_term:
+            return jsonify({'success': False, 'error': 'Search term is required'}), 400
+        
+        result = search_location_data(search_term)
+        return jsonify(result)
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@bp.route('/api/locations')
+@login_required
+def api_locations():
+    """Get available locations for search suggestions"""
+    try:
+        locations = get_available_locations()
+        return jsonify({'success': True, 'locations': locations})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@bp.route('/search/public')
+def search_public():
+    """Search page for public users"""
+    return render_template('search.html', title='Search')
+
+@bp.route('/api/search/public', methods=['POST'])
+def api_search_public():
+    """API endpoint for search functionality (public users)"""
+    try:
+        data = request.get_json()
+        search_term = data.get('search_term', '').strip()
+        
+        if not search_term:
+            return jsonify({'success': False, 'error': 'Search term is required'}), 400
+        
+        result = search_location_data(search_term)
+        return jsonify(result)
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500

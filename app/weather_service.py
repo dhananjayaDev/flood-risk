@@ -9,14 +9,50 @@ except ImportError:
 
 API_KEY = 'ee4046c156c4403db3f172241250107'
 BASE_URL = 'http://api.weatherapi.com/v1'
-LOCATION = 'Ratnapura'
+
+# Dynamic location - can be updated at runtime
+# Load location from file if it exists, otherwise use default
+def _load_saved_location():
+    try:
+        from .search import load_location_from_file
+        return load_location_from_file()
+    except:
+        return 'Ratnapura'
+
+_current_location = _load_saved_location()
+
+def get_location():
+    """Get the current location for weather API calls."""
+    # Always reload from file to get the latest saved location
+    try:
+        from .search import load_location_from_file
+        global _current_location
+        _current_location = load_location_from_file()
+    except:
+        pass  # Keep current value if loading fails
+    return _current_location
+
+def set_location(location):
+    """Set the location for weather API calls."""
+    global _current_location
+    _current_location = location
+    if FLASK_AVAILABLE:
+        try:
+            current_app.logger.info(f"Weather location updated to: {location}")
+        except:
+            print(f"Weather location updated to: {location}")
+    else:
+        print(f"Weather location updated to: {location}")
+
+# For backward compatibility
+LOCATION = 'Ratnapura'  # This is now just a default, not used in API calls
 
 def fetch_api(endpoint, params):
     """
     Helper function to make API requests to WeatherAPI.
     """
     params['key'] = API_KEY
-    params['q'] = LOCATION
+    params['q'] = get_location()  # Use dynamic location
     response = requests.get(f"{BASE_URL}/{endpoint}.json", params=params)
     if response.status_code == 200:
         return response.json()

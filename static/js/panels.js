@@ -8,6 +8,14 @@ document.addEventListener('DOMContentLoaded', function() {
     initializePanels();
     initializeSearch();
     initializeNotifications();
+    
+    // Make functions globally available
+    window.performSearch = performSearch;
+    window.openSearchPanel = openSearchPanel;
+    window.openMapPanel = openMapPanel;
+    window.openNotificationPanel = openNotificationPanel;
+    window.searchFor = searchFor;
+    window.toggleSearch = toggleSearch;
 });
 
 function initializePanels() {
@@ -20,6 +28,18 @@ function initializePanels() {
     // Close panels when clicking overlay
     overlay.addEventListener('click', function() {
         closeAllPanels();
+    });
+    
+    // Close search panel when clicking outside
+    document.addEventListener('click', function(e) {
+        const searchPanel = document.getElementById('search-panel');
+        const searchIcon = document.getElementById('search-icon');
+        
+        if (searchPanel && searchPanel.classList.contains('active')) {
+            if (!searchPanel.contains(e.target) && !searchIcon.contains(e.target)) {
+                closeAllPanels();
+            }
+        }
     });
     
     // Close panels with ESC key
@@ -42,6 +62,25 @@ function openPanel(panelId) {
         overlay.classList.add('active');
         currentPanel = panelId;
         document.body.style.overflow = 'hidden';
+        
+        // Reinitialize search if search panel is opened
+        if (panelId === 'search-panel') {
+            initializeSearch();
+            // Focus the search input but don't clear it
+            const searchInput = document.getElementById('search-input-field');
+            if (searchInput) {
+                searchInput.focus();
+            }
+            
+            // Also attach click listener to search button as fallback
+            const searchButton = panel.querySelector('.modal-search-btn');
+            if (searchButton) {
+                searchButton.onclick = function() {
+                    console.log('Search button clicked');
+                    performSearch();
+                };
+            }
+        }
     }
 }
 
@@ -100,32 +139,126 @@ function closeNotificationPanel() {
 
 // Search functionality
 function initializeSearch() {
-    const searchInput = document.getElementById('search-input-field');
-    if (searchInput) {
-        searchInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                performSearch();
-            }
-        });
+    // Wait a bit for the DOM to be ready
+    setTimeout(() => {
+        const searchInput = document.getElementById('search-input-field');
+        if (searchInput) {
+            console.log('Search input found:', searchInput);
+            // Remove any existing listeners first
+            searchInput.removeEventListener('keypress', handleSearchKeypress);
+            // Add the event listener
+            searchInput.addEventListener('keypress', handleSearchKeypress);
+        } else {
+            console.log('Search input not found!');
+        }
+        
+        // Load recent searches from localStorage
+        loadRecentSearches();
+    }, 100);
+}
+
+function handleSearchKeypress(e) {
+    console.log('Key pressed:', e.key);
+    if (e.key === 'Enter') {
+        console.log('Enter key pressed, calling performSearch');
+        performSearch();
     }
-    
-    // Load recent searches from localStorage
-    loadRecentSearches();
 }
 
 function performSearch() {
     const searchInput = document.getElementById('search-input-field');
     const searchTerm = searchInput ? searchInput.value.trim() : '';
     
+    console.log('performSearch called');
+    console.log('searchInput element:', searchInput);
+    console.log('searchTerm:', searchTerm);
+    
     if (searchTerm) {
         console.log('Searching for:', searchTerm);
         
-        // Add to recent searches
-        addToRecentSearches(searchTerm);
+        // Call our search API to update weather location
+        updateWeatherLocation(searchTerm);
+    } else {
+        console.log('No search term provided');
+    }
+}
+
+async function updateWeatherLocation(searchTerm) {
+    try {
+        // Determine if we're in public or authenticated mode
+        const isPublic = window.location.pathname.includes('/public');
+        const apiEndpoint = isPublic ? '/api/search/public' : '/api/search';
         
-        // Here you would implement actual search functionality
-        // For now, just show a placeholder result
-        showSearchResults(searchTerm);
+        console.log('updateWeatherLocation called with:', searchTerm);
+        console.log('isPublic:', isPublic);
+        console.log('apiEndpoint:', apiEndpoint);
+        
+        const response = await fetch(apiEndpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                search_term: searchTerm
+            })
+        });
+        
+        console.log('Response status:', response.status);
+        console.log('Response ok:', response.ok);
+        
+        const data = await response.json();
+        console.log('Response data:', data);
+        
+        if (data.success) {
+            // Just reload the page immediately
+            location.reload();
+        } else {
+            console.error('Search failed:', data.error);
+        }
+    } catch (error) {
+        console.error('Search error:', error);
+    }
+}
+
+function showSearchLoading() {
+    const resultsContainer = document.getElementById('search-results');
+    if (resultsContainer) {
+        resultsContainer.innerHTML = `
+            <div class="search-loading">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p>Updating weather location to: ${document.getElementById('search-input-field').value}</p>
+            </div>
+        `;
+    }
+}
+
+function showSearchSuccess(message) {
+    const resultsContainer = document.getElementById('search-results');
+    if (resultsContainer) {
+        resultsContainer.innerHTML = `
+            <div class="search-success">
+                <i class="fas fa-check-circle text-success"></i>
+                <h5>Success!</h5>
+                <p>${message}</p>
+                <p class="text-muted">Page will reload in a moment...</p>
+            </div>
+        `;
+    }
+}
+
+function showSearchError(errorMessage) {
+    const resultsContainer = document.getElementById('search-results');
+    if (resultsContainer) {
+        resultsContainer.innerHTML = `
+            <div class="search-error">
+                <i class="fas fa-exclamation-triangle text-warning"></i>
+                <h5>Search Error</h5>
+                <p>${errorMessage}</p>
+                <button class="btn btn-primary btn-sm" onclick="performSearch()">Try Again</button>
+            </div>
+        `;
     }
 }
 
@@ -269,6 +402,10 @@ function updateNotificationCount() {
 // Global functions for navbar integration
 function openSearchPanel() {
     openPanel('search-panel');
+}
+
+function toggleSearch() {
+    openSearchPanel();
 }
 
 function openMapPanel() {

@@ -21,6 +21,29 @@
     min-height: 200px;
 }
 
+/* Special styling for search panel - only search bar visible */
+#search-panel {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    max-width: 90vw;
+    min-height: auto;
+    padding: 0;
+    background: transparent;
+    backdrop-filter: none;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    margin: 0;
+}
+
+/* Hide the old floating search bar */
+.floating-search-bar {
+    display: none !important;
+}
+
 .modal-panel.active {
     display: block;
 }
@@ -75,44 +98,45 @@
 
 #search-panel .modal-search-input-container {
     display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
+    align-items: center;
+    margin-bottom: 0;
+    padding: 8px;
+    position: relative;
 }
 
 #search-panel .modal-search-input-field {
     flex: 1;
-    padding: 12px 15px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 12px 15px 12px 40px;
+    border: none;
     border-radius: 8px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.15);
     color: white;
     font-size: 1rem;
+    min-width: 250px;
+    position: relative;
+}
+
+#search-panel .search-icon {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.6);
+    pointer-events: none;
+    z-index: 1;
 }
 
 #search-panel .modal-search-input-field::placeholder {
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.5);
 }
 
 #search-panel .modal-search-input-field:focus {
     outline: none;
-    border-color: #4CAF50;
+    border-color: rgba(255, 255, 255, 0.4);
     background: rgba(255, 255, 255, 0.15);
 }
 
-#search-panel .modal-search-btn {
-    padding: 12px 20px;
-    background: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background 0.3s ease;
-}
-
-#search-panel .modal-search-btn:hover {
-    background: #45a049;
-}
+/* Search button removed - using icon inside input field */
 
 #search-panel .modal-search-suggestions,
 #search-panel .modal-recent-searches {

@@ -1,42 +1,16 @@
 <!-- Search Panel Component -->
 <div class="modal-panel" id="search-panel">
-    <div class="modal-panel-header">
-        <div class="modal-header-left">
-            <i class="fas fa-search"></i>
-            <span>Search</span>
-        </div>
-        <button class="modal-close-panel" onclick="closeSearchPanel()">
-            <i class="fas fa-times"></i>
-        </button>
+    <div class="modal-search-input-container">
+        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+        </svg>
+        <input type="text" class="modal-search-input-field" placeholder="Search..." id="search-input-field">
     </div>
     
-    <div class="search-content">
-        <div class="modal-search-input-container">
-            <input type="text" class="modal-search-input-field" placeholder="Search locations, weather data..." id="search-input-field">
-            <button class="modal-search-btn" onclick="performSearch()">
-                <i class="fas fa-search"></i>
-            </button>
-        </div>
-        
-        <div class="search-results" id="search-results">
-            <div class="modal-search-suggestions">
-                <h4>Popular Searches</h4>
-                <div class="modal-suggestion-tags">
-                    <span class="modal-suggestion-tag" onclick="searchFor('New York')">New York</span>
-                    <span class="modal-suggestion-tag" onclick="searchFor('Los Angeles')">Los Angeles</span>
-                    <span class="modal-suggestion-tag" onclick="searchFor('Chicago')">Chicago</span>
-                    <span class="modal-suggestion-tag" onclick="searchFor('Houston')">Houston</span>
-                    <span class="modal-suggestion-tag" onclick="searchFor('Phoenix')">Phoenix</span>
-                </div>
-            </div>
-            
-            <div class="modal-recent-searches">
-                <h4>Recent Searches</h4>
-                <div class="recent-list" id="recent-searches-list">
-                    <!-- Recent searches will be populated here -->
-                </div>
-            </div>
-        </div>
+    <div class="search-results" id="search-results">
+        <!-- Search results will appear here -->
     </div>
 </div>
+
 
