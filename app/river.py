@@ -12,6 +12,46 @@ except ImportError:
 # Global river configuration
 DEFAULT_RIVER = "Kalu Ganga (Ratnapura)"
 
+def get_current_river():
+    """
+    Check current_location.txt and return the appropriate river name.
+    If the location matches any available river, use that river.
+    Otherwise, return the default river.
+    """
+    try:
+        # Get the current location from the file
+        from .search import load_location_from_file
+        current_location = load_location_from_file()
+        
+        if not current_location:
+            return DEFAULT_RIVER
+            
+        # Check if current location matches any available river
+        for river_name in RIVER_API_KEYS.keys():
+            # Extract location from river name (e.g., "Kuru Ganga (Kuruvita)" -> "Kuruvita")
+            river_location = river_name.split('(')[-1].split(')')[0].strip().lower()
+            current_location_lower = current_location.lower()
+            
+            # Check if current location matches the river location
+            if (current_location_lower in river_location or 
+                river_location in current_location_lower or
+                current_location_lower in river_name.lower() or 
+                river_name.lower() in current_location_lower):
+                return river_name
+                
+        # If no match found, return default
+        return DEFAULT_RIVER
+        
+    except Exception as e:
+        if FLASK_AVAILABLE:
+            try:
+                current_app.logger.error(f"Error getting current river: {e}")
+            except:
+                print(f"Error getting current river: {e}")
+        else:
+            print(f"Error getting current river: {e}")
+        return DEFAULT_RIVER
+
 # Working API endpoints for river level data
 RIVER_API_KEYS = {
     "Kalu Ganga (Ratnapura)": "2bq292rf6uz",
@@ -63,15 +103,15 @@ def get_river_levels(river_name=None):
     """
     Fetch and return river level data for a specific river using working API endpoints.
     Args:
-        river_name (str): Name of the river (default: uses DEFAULT_RIVER global variable)
+        river_name (str): Name of the river (default: uses current location to determine river)
     Returns:
         pandas.DataFrame: DataFrame with timestamp, river_level, and river columns,
                          or None if no data is retrieved.
     """
     try:
-        # Use global default if no river name provided
+        # Use current location-based river if no river name provided
         if river_name is None:
-            river_name = DEFAULT_RIVER
+            river_name = get_current_river()
         
         # Get API URLs for all rivers
         river_urls = get_api_urls()
@@ -182,14 +222,14 @@ def get_current_river_height(river_name=None):
     """
     Get the current river height for a specific river using working API endpoints.
     Args:
-        river_name (str): Name of the river (default: uses DEFAULT_RIVER global variable)
+        river_name (str): Name of the river (default: uses current location to determine river)
     Returns:
         dict: Dictionary with current river height data or None if no data
     """
     try:
-        # Use global default if no river name provided
+        # Use current location-based river if no river name provided
         if river_name is None:
-            river_name = DEFAULT_RIVER
+            river_name = get_current_river()
             
         df = get_river_levels(river_name)
         
@@ -234,14 +274,14 @@ def get_river_height_7day(river_name=None):
     Get 7-day river height data for chart display.
     Previous days and future days show 0 (no data), current day shows actual height.
     Args:
-        river_name (str): Name of the river (default: uses DEFAULT_RIVER global variable)
+        river_name (str): Name of the river (default: uses current location to determine river)
     Returns:
         list: 7-day array with river height data
     """
     try:
-        # Use global default if no river name provided
+        # Use current location-based river if no river name provided
         if river_name is None:
-            river_name = DEFAULT_RIVER
+            river_name = get_current_river()
             
         # Get current river height using working API
         current_data = get_current_river_height(river_name)
