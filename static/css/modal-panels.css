@@ -109,11 +109,52 @@
     padding: 12px 15px 12px 40px;
     border: none;
     border-radius: 8px;
-    background: rgba(255, 255, 255, 0.15);
-    color: white;
+    background: rgba(255, 255, 255, 0.15) !important;
+    color: white !important;
     font-size: 1rem;
     min-width: 250px;
     position: relative;
+    outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    -webkit-text-fill-color: white !important;
+    -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.15) inset !important;
+    box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.15) inset !important;
+}
+
+#search-panel .modal-search-input-field:focus {
+    background: rgba(255, 255, 255, 0.15) !important;
+    color: white !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+#search-panel .modal-search-input-field:active {
+    background: rgba(255, 255, 255, 0.15) !important;
+    color: white !important;
+}
+
+#search-panel .modal-search-input-field::selection {
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
+}
+
+/* Override browser autocomplete styling */
+#search-panel .modal-search-input-field:-webkit-autofill,
+#search-panel .modal-search-input-field:-webkit-autofill:hover,
+#search-panel .modal-search-input-field:-webkit-autofill:focus,
+#search-panel .modal-search-input-field:-webkit-autofill:active {
+    -webkit-text-fill-color: white !important;
+    -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.15) inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+    background-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+#search-panel .modal-search-input-field:-moz-autofill {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    color: white !important;
 }
 
 #search-panel .search-icon {
@@ -130,11 +171,6 @@
     color: rgba(255, 255, 255, 0.5);
 }
 
-#search-panel .modal-search-input-field:focus {
-    outline: none;
-    border-color: rgba(255, 255, 255, 0.4);
-    background: rgba(255, 255, 255, 0.15);
-}
 
 /* Search button removed - using icon inside input field */
 
