@@ -33,23 +33,72 @@ def create_app():
     # Create database tables
     with app.app_context():
         db.create_all()
-        # Create tables for kalugangadb
+        # Create tables for all river databases
         try:
-            # Import the RiverHeight model to ensure it's registered
-            from app.models import RiverHeight
-            # Create the table for the kalugangadb bind
-            RiverHeight.__table__.create(db.engines['kalugangadb'], checkfirst=True)
+            from app.models import (
+                RiverHeight, KuruGangaHeight, WeyGangaHeight, 
+                DenawakaGangaHeight, KukuleGangaHeight, GalathuraOyaHeight,
+                PelmadullaWeather, RatnapuraWeather, KalawanaWeather,
+                KuruvitaWeather, AyagamaWeather, KahawattaWeather
+            )
+            
+            # Create tables for each river database
+            river_models = [
+                (RiverHeight, 'kalugangadb'),
+                (KuruGangaHeight, 'kuruganga'),
+                (WeyGangaHeight, 'weyganga'),
+                (DenawakaGangaHeight, 'denawakaganga'),
+                (KukuleGangaHeight, 'kukuleganga'),
+                (GalathuraOyaHeight, 'galathuraoya')
+            ]
+            
+            # Create tables for each weather database
+            weather_models = [
+                (PelmadullaWeather, 'pelmadulla_weather'),
+                (RatnapuraWeather, 'ratnapura_weather'),
+                (KalawanaWeather, 'kalawana_weather'),
+                (KuruvitaWeather, 'kuruvita_weather'),
+                (AyagamaWeather, 'ayagama_weather'),
+                (KahawattaWeather, 'kahawatta_weather')
+            ]
+            
+            # Create river tables
+            for model, bind_key in river_models:
+                try:
+                    model.__table__.create(db.engines[bind_key], checkfirst=True)
+                    print(f"✅ Created river table for {bind_key}")
+                except Exception as e:
+                    print(f"⚠️ Could not create river table for {bind_key}: {e}")
+            
+            # Create weather tables
+            for model, bind_key in weather_models:
+                try:
+                    model.__table__.create(db.engines[bind_key], checkfirst=True)
+                    print(f"✅ Created weather table for {bind_key}")
+                except Exception as e:
+                    print(f"⚠️ Could not create weather table for {bind_key}: {e}")
+                    
         except Exception as e:
-            print(f"Note: Could not create kalugangadb tables: {e}")
+            print(f"Note: Could not create river/weather tables: {e}")
     
-    # Start automatic river data collection scheduler
+    # Start automatic river data collection
     try:
-        from app.scheduler import start_automatic_collection
-        if start_automatic_collection():
+        from app.river_data_collector import start_river_data_collection
+        if start_river_data_collection(app):
             print("✅ Automatic river data collection started")
         else:
-            print("⚠️ Failed to start automatic data collection")
+            print("⚠️ Failed to start automatic river data collection")
     except Exception as e:
-        print(f"⚠️ Scheduler not available: {e}")
+        print(f"⚠️ River data collector not available: {e}")
+    
+    # Start automatic weather data collection
+    try:
+        from app.weather_data_collector import start_weather_data_collection
+        if start_weather_data_collection(app):
+            print("✅ Automatic weather data collection started")
+        else:
+            print("⚠️ Failed to start automatic weather data collection")
+    except Exception as e:
+        print(f"⚠️ Weather data collector not available: {e}")
     
     return app

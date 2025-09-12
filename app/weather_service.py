@@ -1,6 +1,7 @@
 import requests
 import json
 from datetime import datetime, timedelta
+import pytz
 try:
     from flask import current_app
     FLASK_AVAILABLE = True
@@ -59,13 +60,18 @@ def fetch_api(endpoint, params):
     else:
         raise Exception(f"API request failed: {response.status_code} - {response.text}")
 
-def get_current_weather():
+def get_current_weather(location_query=None):
     """
-    Function to fetch and return current weather data for current location.
+    Function to fetch and return current weather data for specified location or current location.
     Returns a dictionary with temperature, condition, UV index, location, and river name.
     """
     try:
-        data = fetch_api('current', {})
+        # Use provided location or default to current location
+        params = {}
+        if location_query:
+            params['q'] = location_query
+        
+        data = fetch_api('current', params)
         current = data['current']
         location = data['location']
         
@@ -94,6 +100,53 @@ def get_current_weather():
             current_app.logger.error(f"Error fetching current weather: {str(e)}")
         else:
             print(f"Error fetching current weather: {str(e)}")
+        return None
+
+def get_weather_for_location(location_query):
+    """
+    Function to fetch comprehensive weather data for a specific location.
+    Returns a dictionary with all weather parameters.
+    """
+    try:
+        # Fetch current weather data
+        current_data = fetch_api('current', {'q': location_query})
+        current = current_data['current']
+        location = current_data['location']
+        
+        # Fetch astronomy data for sunrise/sunset
+        today = datetime.now().strftime('%Y-%m-%d')
+        astronomy_data = fetch_api('astronomy', {'q': location_query, 'dt': today})
+        astro = astronomy_data['astronomy']['astro']
+        
+        result = {
+            'location': location['name'],
+            'timestamp': datetime.now(pytz.timezone('Asia/Colombo')),
+            'temperature_c': current.get('temp_c', 0.0),
+            'humidity': current.get('humidity', 0.0),
+            'precip_mm': current.get('precip_mm', 0.0),
+            'pressure_mb': current.get('pressure_mb', 0.0),
+            'wind_kph': current.get('wind_kph', 0.0),
+            'wind_dir': current.get('wind_dir', 'N'),
+            'uv_index': current.get('uv', 0.0),
+            'condition': current.get('condition', {}).get('text', 'Unknown'),
+            'feelslike_c': current.get('feelslike_c', 0.0),
+            'cloud': current.get('cloud', 0.0),
+            'visibility_km': current.get('vis_km', 0.0),
+            'gust_kph': current.get('gust_kph', 0.0),
+            'sunrise': astro.get('sunrise', '06:00 AM'),
+            'sunset': astro.get('sunset', '06:00 PM')
+        }
+        
+        if FLASK_AVAILABLE:
+            current_app.logger.info(f"Weather for {location['name']}: {json.dumps(result, indent=2)}")
+        else:
+            print(f"Weather for {location['name']}: {json.dumps(result, indent=2)}")
+        return result
+    except Exception as e:
+        if FLASK_AVAILABLE:
+            current_app.logger.error(f"Error fetching weather for {location_query}: {str(e)}")
+        else:
+            print(f"Error fetching weather for {location_query}: {str(e)}")
         return None
 
 def get_wind():

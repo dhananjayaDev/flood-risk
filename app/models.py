@@ -19,9 +19,10 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return f'<User {self.username}>'
 
+# Base RiverHeight model for Kalu Ganga (existing)
 class RiverHeight(db.Model):
     """
-    Model for storing river height data.
+    Model for storing Kalu Ganga river height data.
     Database: kalugangadb
     """
     __tablename__ = 'river_heights'
@@ -43,6 +44,417 @@ class RiverHeight(db.Model):
             'river_name': self.river_name,
             'timestamp': self.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
             'height': self.height,
+            'created_at': self.created_at.strftime('%Y-%m-%d %H:%M:%S')
+        }
+
+# Individual river models
+class KuruGangaHeight(db.Model):
+    """Model for Kuru Ganga (Kuruvita) river height data"""
+    __tablename__ = 'river_heights'
+    __bind_key__ = 'kuruganga'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    river_name = db.Column(db.String(100), nullable=False, default='Kuru Ganga (Kuruvita)', index=True)
+    timestamp = db.Column(db.DateTime, nullable=False, index=True)
+    height = db.Column(db.Float, nullable=False)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(pytz.timezone('Asia/Colombo')))
+    
+    def __repr__(self):
+        return f'<KuruGangaHeight {self.timestamp}: {self.height}m>'
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'river_name': self.river_name,
+            'timestamp': self.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+            'height': self.height,
+            'created_at': self.created_at.strftime('%Y-%m-%d %H:%M:%S')
+        }
+
+class WeyGangaHeight(db.Model):
+    """Model for Wey Ganga (Kahawaththa) river height data"""
+    __tablename__ = 'river_heights'
+    __bind_key__ = 'weyganga'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    river_name = db.Column(db.String(100), nullable=False, default='Wey Ganga (Kahawaththa)', index=True)
+    timestamp = db.Column(db.DateTime, nullable=False, index=True)
+    height = db.Column(db.Float, nullable=False)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(pytz.timezone('Asia/Colombo')))
+    
+    def __repr__(self):
+        return f'<WeyGangaHeight {self.timestamp}: {self.height}m>'
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'river_name': self.river_name,
+            'timestamp': self.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+            'height': self.height,
+            'created_at': self.created_at.strftime('%Y-%m-%d %H:%M:%S')
+        }
+
+class DenawakaGangaHeight(db.Model):
+    """Model for Denawaka Ganga (Pelmadulla) river height data"""
+    __tablename__ = 'river_heights'
+    __bind_key__ = 'denawakaganga'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    river_name = db.Column(db.String(100), nullable=False, default='Denawaka Ganga (Pelmadulla)', index=True)
+    timestamp = db.Column(db.DateTime, nullable=False, index=True)
+    height = db.Column(db.Float, nullable=False)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(pytz.timezone('Asia/Colombo')))
+    
+    def __repr__(self):
+        return f'<DenawakaGangaHeight {self.timestamp}: {self.height}m>'
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'river_name': self.river_name,
+            'timestamp': self.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+            'height': self.height,
+            'created_at': self.created_at.strftime('%Y-%m-%d %H:%M:%S')
+        }
+
+class KukuleGangaHeight(db.Model):
+    """Model for Kukule Ganga (Kalawana) river height data"""
+    __tablename__ = 'river_heights'
+    __bind_key__ = 'kukuleganga'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    river_name = db.Column(db.String(100), nullable=False, default='Kukule Ganga (Kalawana)', index=True)
+    timestamp = db.Column(db.DateTime, nullable=False, index=True)
+    height = db.Column(db.Float, nullable=False)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(pytz.timezone('Asia/Colombo')))
+    
+    def __repr__(self):
+        return f'<KukuleGangaHeight {self.timestamp}: {self.height}m>'
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'river_name': self.river_name,
+            'timestamp': self.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+            'height': self.height,
+            'created_at': self.created_at.strftime('%Y-%m-%d %H:%M:%S')
+        }
+
+class GalathuraOyaHeight(db.Model):
+    """Model for Galathura Oya (Ayagama) river height data"""
+    __tablename__ = 'river_heights'
+    __bind_key__ = 'galathuraoya'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    river_name = db.Column(db.String(100), nullable=False, default='Galathura Oya (Ayagama)', index=True)
+    timestamp = db.Column(db.DateTime, nullable=False, index=True)
+    height = db.Column(db.Float, nullable=False)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(pytz.timezone('Asia/Colombo')))
+    
+    def __repr__(self):
+        return f'<GalathuraOyaHeight {self.timestamp}: {self.height}m>'
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'river_name': self.river_name,
+            'timestamp': self.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+            'height': self.height,
+            'created_at': self.created_at.strftime('%Y-%m-%d %H:%M:%S')
+        }
+
+# Weather data models for each location
+class PelmadullaWeather(db.Model):
+    """Model for Pelmadulla weather data"""
+    __tablename__ = 'weather_data'
+    __bind_key__ = 'pelmadulla_weather'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    location = db.Column(db.String(100), nullable=False, default='Pelmadulla', index=True)
+    timestamp = db.Column(db.DateTime, nullable=False, index=True)
+    temperature_c = db.Column(db.Float, nullable=False)
+    humidity = db.Column(db.Float, nullable=False)
+    precip_mm = db.Column(db.Float, nullable=False)
+    pressure_mb = db.Column(db.Float, nullable=False)
+    wind_kph = db.Column(db.Float, nullable=False)
+    wind_dir = db.Column(db.String(10), nullable=False)
+    uv_index = db.Column(db.Float, nullable=False)
+    condition = db.Column(db.String(100), nullable=False)
+    feelslike_c = db.Column(db.Float, nullable=False)
+    cloud = db.Column(db.Float, nullable=False)
+    visibility_km = db.Column(db.Float, nullable=False)
+    gust_kph = db.Column(db.Float, nullable=False)
+    sunrise = db.Column(db.String(20), nullable=False)
+    sunset = db.Column(db.String(20), nullable=False)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(pytz.timezone('Asia/Colombo')))
+    
+    def __repr__(self):
+        return f'<PelmadullaWeather {self.timestamp}: {self.temperature_c}°C, {self.condition}>'
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'location': self.location,
+            'timestamp': self.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+            'temperature_c': self.temperature_c,
+            'humidity': self.humidity,
+            'precip_mm': self.precip_mm,
+            'pressure_mb': self.pressure_mb,
+            'wind_kph': self.wind_kph,
+            'wind_dir': self.wind_dir,
+            'uv_index': self.uv_index,
+            'condition': self.condition,
+            'feelslike_c': self.feelslike_c,
+            'cloud': self.cloud,
+            'visibility_km': self.visibility_km,
+            'gust_kph': self.gust_kph,
+            'sunrise': self.sunrise,
+            'sunset': self.sunset,
+            'created_at': self.created_at.strftime('%Y-%m-%d %H:%M:%S')
+        }
+
+class RatnapuraWeather(db.Model):
+    """Model for Ratnapura weather data"""
+    __tablename__ = 'weather_data'
+    __bind_key__ = 'ratnapura_weather'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    location = db.Column(db.String(100), nullable=False, default='Ratnapura', index=True)
+    timestamp = db.Column(db.DateTime, nullable=False, index=True)
+    temperature_c = db.Column(db.Float, nullable=False)
+    humidity = db.Column(db.Float, nullable=False)
+    precip_mm = db.Column(db.Float, nullable=False)
+    pressure_mb = db.Column(db.Float, nullable=False)
+    wind_kph = db.Column(db.Float, nullable=False)
+    wind_dir = db.Column(db.String(10), nullable=False)
+    uv_index = db.Column(db.Float, nullable=False)
+    condition = db.Column(db.String(100), nullable=False)
+    feelslike_c = db.Column(db.Float, nullable=False)
+    cloud = db.Column(db.Float, nullable=False)
+    visibility_km = db.Column(db.Float, nullable=False)
+    gust_kph = db.Column(db.Float, nullable=False)
+    sunrise = db.Column(db.String(20), nullable=False)
+    sunset = db.Column(db.String(20), nullable=False)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(pytz.timezone('Asia/Colombo')))
+    
+    def __repr__(self):
+        return f'<RatnapuraWeather {self.timestamp}: {self.temperature_c}°C, {self.condition}>'
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'location': self.location,
+            'timestamp': self.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+            'temperature_c': self.temperature_c,
+            'humidity': self.humidity,
+            'precip_mm': self.precip_mm,
+            'pressure_mb': self.pressure_mb,
+            'wind_kph': self.wind_kph,
+            'wind_dir': self.wind_dir,
+            'uv_index': self.uv_index,
+            'condition': self.condition,
+            'feelslike_c': self.feelslike_c,
+            'cloud': self.cloud,
+            'visibility_km': self.visibility_km,
+            'gust_kph': self.gust_kph,
+            'sunrise': self.sunrise,
+            'sunset': self.sunset,
+            'created_at': self.created_at.strftime('%Y-%m-%d %H:%M:%S')
+        }
+
+class KalawanaWeather(db.Model):
+    """Model for Kalawana weather data"""
+    __tablename__ = 'weather_data'
+    __bind_key__ = 'kalawana_weather'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    location = db.Column(db.String(100), nullable=False, default='Kalawana', index=True)
+    timestamp = db.Column(db.DateTime, nullable=False, index=True)
+    temperature_c = db.Column(db.Float, nullable=False)
+    humidity = db.Column(db.Float, nullable=False)
+    precip_mm = db.Column(db.Float, nullable=False)
+    pressure_mb = db.Column(db.Float, nullable=False)
+    wind_kph = db.Column(db.Float, nullable=False)
+    wind_dir = db.Column(db.String(10), nullable=False)
+    uv_index = db.Column(db.Float, nullable=False)
+    condition = db.Column(db.String(100), nullable=False)
+    feelslike_c = db.Column(db.Float, nullable=False)
+    cloud = db.Column(db.Float, nullable=False)
+    visibility_km = db.Column(db.Float, nullable=False)
+    gust_kph = db.Column(db.Float, nullable=False)
+    sunrise = db.Column(db.String(20), nullable=False)
+    sunset = db.Column(db.String(20), nullable=False)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(pytz.timezone('Asia/Colombo')))
+    
+    def __repr__(self):
+        return f'<KalawanaWeather {self.timestamp}: {self.temperature_c}°C, {self.condition}>'
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'location': self.location,
+            'timestamp': self.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+            'temperature_c': self.temperature_c,
+            'humidity': self.humidity,
+            'precip_mm': self.precip_mm,
+            'pressure_mb': self.pressure_mb,
+            'wind_kph': self.wind_kph,
+            'wind_dir': self.wind_dir,
+            'uv_index': self.uv_index,
+            'condition': self.condition,
+            'feelslike_c': self.feelslike_c,
+            'cloud': self.cloud,
+            'visibility_km': self.visibility_km,
+            'gust_kph': self.gust_kph,
+            'sunrise': self.sunrise,
+            'sunset': self.sunset,
+            'created_at': self.created_at.strftime('%Y-%m-%d %H:%M:%S')
+        }
+
+class KuruvitaWeather(db.Model):
+    """Model for Kuruvita weather data"""
+    __tablename__ = 'weather_data'
+    __bind_key__ = 'kuruvita_weather'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    location = db.Column(db.String(100), nullable=False, default='Kuruvita', index=True)
+    timestamp = db.Column(db.DateTime, nullable=False, index=True)
+    temperature_c = db.Column(db.Float, nullable=False)
+    humidity = db.Column(db.Float, nullable=False)
+    precip_mm = db.Column(db.Float, nullable=False)
+    pressure_mb = db.Column(db.Float, nullable=False)
+    wind_kph = db.Column(db.Float, nullable=False)
+    wind_dir = db.Column(db.String(10), nullable=False)
+    uv_index = db.Column(db.Float, nullable=False)
+    condition = db.Column(db.String(100), nullable=False)
+    feelslike_c = db.Column(db.Float, nullable=False)
+    cloud = db.Column(db.Float, nullable=False)
+    visibility_km = db.Column(db.Float, nullable=False)
+    gust_kph = db.Column(db.Float, nullable=False)
+    sunrise = db.Column(db.String(20), nullable=False)
+    sunset = db.Column(db.String(20), nullable=False)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(pytz.timezone('Asia/Colombo')))
+    
+    def __repr__(self):
+        return f'<KuruvitaWeather {self.timestamp}: {self.temperature_c}°C, {self.condition}>'
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'location': self.location,
+            'timestamp': self.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+            'temperature_c': self.temperature_c,
+            'humidity': self.humidity,
+            'precip_mm': self.precip_mm,
+            'pressure_mb': self.pressure_mb,
+            'wind_kph': self.wind_kph,
+            'wind_dir': self.wind_dir,
+            'uv_index': self.uv_index,
+            'condition': self.condition,
+            'feelslike_c': self.feelslike_c,
+            'cloud': self.cloud,
+            'visibility_km': self.visibility_km,
+            'gust_kph': self.gust_kph,
+            'sunrise': self.sunrise,
+            'sunset': self.sunset,
+            'created_at': self.created_at.strftime('%Y-%m-%d %H:%M:%S')
+        }
+
+class AyagamaWeather(db.Model):
+    """Model for Ayagama weather data"""
+    __tablename__ = 'weather_data'
+    __bind_key__ = 'ayagama_weather'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    location = db.Column(db.String(100), nullable=False, default='Ayagama', index=True)
+    timestamp = db.Column(db.DateTime, nullable=False, index=True)
+    temperature_c = db.Column(db.Float, nullable=False)
+    humidity = db.Column(db.Float, nullable=False)
+    precip_mm = db.Column(db.Float, nullable=False)
+    pressure_mb = db.Column(db.Float, nullable=False)
+    wind_kph = db.Column(db.Float, nullable=False)
+    wind_dir = db.Column(db.String(10), nullable=False)
+    uv_index = db.Column(db.Float, nullable=False)
+    condition = db.Column(db.String(100), nullable=False)
+    feelslike_c = db.Column(db.Float, nullable=False)
+    cloud = db.Column(db.Float, nullable=False)
+    visibility_km = db.Column(db.Float, nullable=False)
+    gust_kph = db.Column(db.Float, nullable=False)
+    sunrise = db.Column(db.String(20), nullable=False)
+    sunset = db.Column(db.String(20), nullable=False)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(pytz.timezone('Asia/Colombo')))
+    
+    def __repr__(self):
+        return f'<AyagamaWeather {self.timestamp}: {self.temperature_c}°C, {self.condition}>'
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'location': self.location,
+            'timestamp': self.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+            'temperature_c': self.temperature_c,
+            'humidity': self.humidity,
+            'precip_mm': self.precip_mm,
+            'pressure_mb': self.pressure_mb,
+            'wind_kph': self.wind_kph,
+            'wind_dir': self.wind_dir,
+            'uv_index': self.uv_index,
+            'condition': self.condition,
+            'feelslike_c': self.feelslike_c,
+            'cloud': self.cloud,
+            'visibility_km': self.visibility_km,
+            'gust_kph': self.gust_kph,
+            'sunrise': self.sunrise,
+            'sunset': self.sunset,
+            'created_at': self.created_at.strftime('%Y-%m-%d %H:%M:%S')
+        }
+
+class KahawattaWeather(db.Model):
+    """Model for Kahawatta weather data"""
+    __tablename__ = 'weather_data'
+    __bind_key__ = 'kahawatta_weather'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    location = db.Column(db.String(100), nullable=False, default='Kahawatta', index=True)
+    timestamp = db.Column(db.DateTime, nullable=False, index=True)
+    temperature_c = db.Column(db.Float, nullable=False)
+    humidity = db.Column(db.Float, nullable=False)
+    precip_mm = db.Column(db.Float, nullable=False)
+    pressure_mb = db.Column(db.Float, nullable=False)
+    wind_kph = db.Column(db.Float, nullable=False)
+    wind_dir = db.Column(db.String(10), nullable=False)
+    uv_index = db.Column(db.Float, nullable=False)
+    condition = db.Column(db.String(100), nullable=False)
+    feelslike_c = db.Column(db.Float, nullable=False)
+    cloud = db.Column(db.Float, nullable=False)
+    visibility_km = db.Column(db.Float, nullable=False)
+    gust_kph = db.Column(db.Float, nullable=False)
+    sunrise = db.Column(db.String(20), nullable=False)
+    sunset = db.Column(db.String(20), nullable=False)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(pytz.timezone('Asia/Colombo')))
+    
+    def __repr__(self):
+        return f'<KahawattaWeather {self.timestamp}: {self.temperature_c}°C, {self.condition}>'
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'location': self.location,
+            'timestamp': self.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+            'temperature_c': self.temperature_c,
+            'humidity': self.humidity,
+            'precip_mm': self.precip_mm,
+            'pressure_mb': self.pressure_mb,
+            'wind_kph': self.wind_kph,
+            'wind_dir': self.wind_dir,
+            'uv_index': self.uv_index,
+            'condition': self.condition,
+            'feelslike_c': self.feelslike_c,
+            'cloud': self.cloud,
+            'visibility_km': self.visibility_km,
+            'gust_kph': self.gust_kph,
+            'sunrise': self.sunrise,
+            'sunset': self.sunset,
             'created_at': self.created_at.strftime('%Y-%m-%d %H:%M:%S')
         }
     
